@@ -49,26 +49,26 @@ def create():
     return render_template('blog/create.html')
 
 def get_post(id, check_author=True):
-    post = get_db().execute(
+    entry = get_db().execute(
         'SELECT p.id, title, body, created, author_id, username'
         ' FROM post p JOIN user u ON p.author_id = u.id'
         ' WHERE p.id = ?',
         (id,)
     ).fetchone()
 
-    if post is None:
+    if entry is None:
         abort(404, "Post id {0} doesn't exist.".format(id))
 
-    if check_author and post['author_id'] != g.user['id']:
+    if check_author and entry['author_id'] != g.user['id']:
         abort(403)
 
-    return post
+    return entry
 
 
 @bp.route('/<int:id>/update', methods=('GET', 'POST'))
 @login_required
 def update(id):
-    post = get_post(id)
+    entry = get_post(id)
 
     if request.method == 'POST':
         title = request.form['title']
@@ -90,7 +90,7 @@ def update(id):
             db.commit()
             return redirect(url_for('blog.index'))
 
-    return render_template('blog/update.html', post=post)
+    return render_template('blog/update.html', post=entry)
 
 
 @bp.route('/<int:id>/delete', methods=('POST',))
