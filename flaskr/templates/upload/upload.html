@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<!-- https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/ -->
+<!-- https://speckyboy.com/custom-file-upload-fields/ -->
+
+   <!-- Page to use if i want preview of image -->
+        <!-- https://stackoverflow.com/questions/4459379/preview-an-image-before-it-is-uploaded -->
+
+
+
+<script>
+  // To see the name of the imagien without the full directory
+  function pr() {
+    
+    var path = document.getElementById('image').value;
+    var filename = path.replace(/^.*\\/, "");
+    console.log(path);
+    document.getElementById("result").innerHTML = filename;
+  };
+
+  // if no file has been chosen, then have a Select file line.
+  function SelectFileText() {
+ 
+  document.getElementById("result").innerHTML = "Select file ...";
+  }
+
+  function preview() {
+    frame.src=URL.createObjectURL(event.target.files[0]);
+}
+
+function refreshpage() {
+  window.location.reload();
+
+}
+
+</script>
+
+<div class="container" id="UploadPlacement">
+
+  <div class="row">
+    <div class="col">
+    
+      <h1 style="color:white">Upload an image</h1>
+      <hr>
+
+    </div>
+  </div>
+
+  <div class="row">
+    
+    <div class="col">
+
+    </div>
+
+    <div class="col">
+
+        <form  method="POST" enctype="multipart/form-data" style="width:400px">
+          <div class="form-group">
+            <div class="custom-file">           
+              <input type="file" class="custom-file-input" name="image" placeholder="image" id="image" oninput="pr()"  onchange="preview()">
+              <label class="custom-file-label" for="image" ><span id="result"></span></label>
+            </div>
+          </div>
+        </form>
+
+    </div>
+      
+    <div class="col">
+        
+    </div>
+
+  </div>
+
+  
+
+
+    <div class="container">
+      <img id="frame" />
+    </div>
+
+    <div class="row">
+      
+        <button type="submit" class="btn btn-primary" style="margin-left: 40%; margin-right:2px; margin-bottom: 20px; margin-top: 20px;">Upload</button>
+     
+      
+        <button type="button" class="btn btn-secondary" style="margin-bottom: 20px; margin-top: 20px;" onclick="refreshpage()">Cancel</button>
+      
+      
+    </div>
+
+
+</div> 
+
+
+
+
+
+{% endblock %}

@@ -1,0 +1,126 @@
+<!doctype html>
+
+<html lang="en" >
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+   <!-- For the dropdown menu funcrion to work correctly-->
+   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+  
+  <script type="text/javascipt" src="js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+
+  <!-- Bootstrap documentation -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+  <!-- My own file form the tutorial-->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  
+  <!-- Title for the website-->
+  <title >Wright Place: {% block title %}{% endblock %}</title>
+</head>
+
+
+
+<body onload="SelectFileText()">
+
+<!-- Header and  Navbar -->
+<header class="navbar navbar-expand-md navbar-light bg-white" id="nav">
+  <nav class="container felx-wrap flex-md-nowrap" aria-label="Main Navigation" id="nav">
+    <!-- the the DJ gif -->
+    <a class="navbar-brand p-0 me-2" href="/">
+      <img src="{{ url_for('static', filename='DJ.gif') }}" alt="dj" style="width:40px;height:40px;"> 
+    </a>
+    <!-- Button when breakpoint is hit -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <!-- Left side of the navbar -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+        {% if g.user %}
+            <ul class="navbar-nav flex-row flex-wrap bd-navbar-nav pt-2 py-md-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('blog.create') }}">New Entry</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ url_for('upload.upload_file') }}">Upload photo</a>
+                </li>
+            </ul>
+    </div>
+    
+    <!-- Right side of the navbar -->
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav flex-row flex-wrap bd-navbar-nav pt-2 py-md-0 ">
+              <div class="dropdown">
+                  <!-- Username Needs styling -->
+                  <a class="nav-link" href="/settings" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-expanded="false"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-gear" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M8.837 1.626c-.246-.835-1.428-.835-1.674 0l-.094.319A1.873 1.873 0 0 1 4.377 3.06l-.292-.16c-.764-.415-1.6.42-1.184 1.185l.159.292a1.873 1.873 0 0 1-1.115 2.692l-.319.094c-.835.246-.835 1.428 0 1.674l.319.094a1.873 1.873 0 0 1 1.115 2.693l-.16.291c-.415.764.42 1.6 1.185 1.184l.292-.159a1.873 1.873 0 0 1 2.692 1.116l.094.318c.246.835 1.428.835 1.674 0l.094-.319a1.873 1.873 0 0 1 2.693-1.115l.291.16c.764.415 1.6-.42 1.184-1.185l-.159-.291a1.873 1.873 0 0 1 1.116-2.693l.318-.094c.835-.246.835-1.428 0-1.674l-.319-.094a1.873 1.873 0 0 1-1.115-2.692l.16-.292c.415-.764-.42-1.6-1.185-1.184l-.291.159A1.873 1.873 0 0 1 8.93 1.945l-.094-.319zm-2.633-.283c.527-1.79 3.065-1.79 3.592 0l.094.319a.873.873 0 0 0 1.255.52l.292-.16c1.64-.892 3.434.901 2.54 2.541l-.159.292a.873.873 0 0 0 .52 1.255l.319.094c1.79.527 1.79 3.065 0 3.592l-.319.094a.873.873 0 0 0-.52 1.255l.16.292c.893 1.64-.902 3.434-2.541 2.54l-.292-.159a.873.873 0 0 0-1.255.52l-.094.319c-.527 1.79-3.065 1.79-3.592 0l-.094-.319a.873.873 0 0 0-1.255-.52l-.292.16c-1.64.893-3.433-.902-2.54-2.541l.159-.292a.873.873 0 0 0-.52-1.255l-.319-.094c-1.79-.527-1.79-3.065 0-3.592l.319-.094a.873.873 0 0 0 .52-1.255l-.16-.292c-.892-1.64.902-3.433 2.541-2.54l.292.159a.873.873 0 0 0 1.255-.52l.094-.319z"/>
+                    <path fill-rule="evenodd" d="M8 5.754a2.246 2.246 0 1 0 0 4.492 2.246 2.246 0 0 0 0-4.492zM4.754 8a3.246 3.246 0 1 1 6.492 0 3.246 3.246 0 0 1-6.492 0z"/>
+                    </svg></a>
+
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                      <li class="nav-item"><h3><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                      </svg> {{ g.user['username'] }}</h3></li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li class="nav-item" ><a class="nav-link" href="{{ url_for('blog.PasswordChange') }}">Change Password</a></li>
+                      <li class="nav-item" ><a class="nav-link" href="{{ url_for('auth.logout') }}">Log Out</a></li>
+                    </ul>
+              </div>
+            </ul>
+    </div>
+        
+        <!-- If user is not loggedin -->
+        {% else %}
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav flex-row flex-wrap bd-navbar-nav pt-2 py-md-0">
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.register') }}">Register</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">Login</a></li>
+            </ul>
+    
+        {% endif %}
+    </div>
+  </nav>
+</header>
+
+<!-- From tutorial, Main content of page-->
+<main style="margin-top:20px;">
+  <div class="container" id="MainContent" > 
+    
+    <header >
+      {% block header %}{% endblock %}
+    </header>
+
+    {% if get_flashed_messages() %}
+              <header>
+                  <div class="alert alert-danger border text-center" role="alert">
+                      {{ get_flashed_messages() | join(" ") }}
+                  </div>
+              </header>
+    {% endif %}
+  
+    <!-- Main content-->
+    {% block content %}{% endblock %}
+
+
+  </div>
+</main>
+
+
+<!--Footer-->
+<footer class="small text-center text-muted" >
+  {% block footer %}{% endblock %}
+</footer>
+
+</body>
+
+</html>
