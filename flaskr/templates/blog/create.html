@@ -5,15 +5,69 @@
 {% endblock %}
 
 {% block content %}
-  <form method="post">
-    <div class="form-group">
-      <input autocomplete="off" autofocus class="form-control" name="title" id="title" placeholder="Title" type="text" value="{{ request.form['title'] }}" style="width: 100%;" required>
+<script>
+  // To see the name of the imagien without the full directory
+  function pr() {
+    
+    var path = document.getElementById('image').value;
+    var filename = path.replace(/^.*\\/, "");
+    console.log(path);
+    document.getElementById("result").innerHTML = filename;
+  };
+
+  // if no file has been chosen, then have a Select file line.
+  function SelectFileText() {
+ 
+  document.getElementById("result").innerHTML = "Select file ...";
+  }
+
+  function preview() {
+    frame.src=URL.createObjectURL(event.target.files[0]);
+}
+
+function refreshpage() {
+  window.location.reload();
+
+}
+
+</script>
+
+<div class="row">
+  <div class="col">
+  
+    <h1 style="color:white">Upload an image</h1>
+    <hr>
+
+  </div>
+</div>
+
+
+    <div class="row">
+      <div class="col">
+        <form method="post">
+            <div class="form-group">
+              <input autocomplete="off" autofocus class="form-control" name="title" id="title" placeholder="Title" type="text" value="{{ request.form['title'] }}" style="width: 100%;" required>
+            </div>
+
+            <div class="form-floating">
+              <textarea class="form-control" placeholder="Leave a comment here" name="body" id="body" style="width: 100%; height: 400px;">{{ request.form['body'] }}</textarea>
+            </div>
+
+            <button class="btn btn-primary" type="submit" value="Save">Save</button>
+        </form>
+
+      </div>
     </div>
 
-    <div class="form-floating">
-      <textarea class="form-control" placeholder="Leave a comment here" name="body" id="body" style="width: 100%; height: 400px;">{{ request.form['body'] }}</textarea>
+  
+  
+  
+    
+  
+  
+  
+  
 
-    </div>
-    <button class="btn btn-primary" type="submit" value="Save">Save</button>
-  </form>
+
+
 {% endblock %}

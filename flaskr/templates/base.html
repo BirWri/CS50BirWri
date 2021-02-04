@@ -20,6 +20,24 @@
 
   <!-- My own file form the tutorial-->
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+  <!-- TinuMCE-->
+  
+  <script src="static/tinymce_5.6.2_dev/tinymce/js/tinymce/tinymce.min.js"></script>
+  
+  <script type="text/javascript">
+    tinymce.init({
+      selector: '#body',
+      plugins: 'advlist  fullpage',
+      
+      height: 500,
+      
+      toolbar: 'undo redo  | code '
+    });
+    </script>
+
+
+
   
   <!-- Title for the website-->
   <title >Wright Place: {% block title %}{% endblock %}</title>
@@ -49,7 +67,7 @@
                     <a class="nav-link" href="/">Home<span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('blog.create') }}">New Entry</a>
+                    <a class="nav-link" href="{{ url_for('blog.post') }}">New Entry</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="{{ url_for('upload.upload_file') }}">Upload photo</a>

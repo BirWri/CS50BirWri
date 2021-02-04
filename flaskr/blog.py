@@ -1,11 +1,22 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for
+    Flask, Blueprint, flash, g, redirect, render_template, request, url_for, escape, current_app, send_from_directory
 )
 from werkzeug.exceptions import abort
 from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.utils import secure_filename
 
 from flaskr.auth import login_required
 from flaskr.db import get_db
+
+from flask_wtf import FlaskForm
+from wtforms import StringField, validators, TextAreaField, SubmitField
+from wtforms.validators import InputRequired, Length
+
+import re
+import os
+
+from . import ALLOWED_EXTENSIONS, UPLOAD_FOLDER
+
 
 bp = Blueprint('blog', __name__)
 
@@ -23,12 +34,18 @@ def index():
         return render_template('blog/index.html', posts=posts)
 
 #https://www.kevin7.net/post_detail/tinymce-and-flask
+#https://pypi.org/project/bleach/
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
 def create():
     if request.method == 'POST':
+        
+        # To remove html tags from string
+        #https://medium.com/@jorlugaqui/how-to-strip-html-tags-from-a-string-in-python-7cb81a2bbf44
+        clean = re.compile('<.*?>')
+
         title = request.form['title']
-        body = request.form['body']
+        body = re.sub(clean, '', request.form['body'])
         error = None
 
         if not title:
@@ -38,15 +55,86 @@ def create():
             flash(error)
         else:
             db = get_db()
+            path_1 ="empthy"
             db.execute(
-                'INSERT INTO post (title, body, author_id)'
-                ' VALUES (?, ?, ?)',
-                (title, body, g.user['id'])
+                'INSERT INTO post (title, body, author_id, path_1)'
+                ' VALUES (?, ?, ?, ?)',
+                (title, body, g.user['id'], path_1)
             )
             db.commit()
             return redirect(url_for('blog.index'))
 
-    return render_template('blog/create.html')
+    return render_template('blog/post.html')
+
+#https://www.tiny.cloud/blog/bootstrap-wysiwyg-editor/
+#https://www.tiny.cloud/docs/general-configuration-guide/upload-images/
+# new post entry
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@bp.route('/post', methods=('GET', 'POST'))
+@login_required
+def post():
+    if request.method == 'POST':
+        
+        clean = re.compile('<.*?>')
+
+        title = request.form['title']
+        body = re.sub(clean, '', request.form['body'])
+        file = request.files['file']
+
+        print(file.filename)
+
+
+        print(body)
+        error = None
+
+        if not title:
+            error = 'Title is required.'
+
+        if error is not None:
+            flash(error)
+
+        if not body:
+            error = 'Content is required.'
+
+
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+            path_1 = UPLOAD_FOLDER+filename
+            print(path_1)
+            
+            db = get_db()
+            db.execute(
+                'INSERT INTO post (title, body, author_id, path_1)'
+                ' VALUES (?, ?, ?, ?)',
+                (title, body, g.user['id'],  path_1)
+            )
+            db.commit()
+            return redirect("/")
+
+        path_1 = "empthy"
+        print(path_1)
+            
+        db = get_db()
+        db.execute(
+            'INSERT INTO post (title, body, author_id, path_1)'
+            ' VALUES (?, ?, ?, ?)',
+            (title, body, g.user['id'],  path_1)
+        )
+        db.commit()
+        return redirect("/")
+
+    else:
+        return render_template('blog/post.html')
+
+#potentsially not imoratnt function
+@bp.route('/upload/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'],
+                               filename)
 
 def get_post(id, check_author=True):
     entry = get_db().execute(
@@ -155,3 +243,4 @@ def PasswordChange():
         return redirect(url_for('index'))  
 
     return render_template('blog/PasswordChange.html') 
+

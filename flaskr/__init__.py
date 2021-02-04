@@ -12,7 +12,7 @@ from auth import login_required
 
 
 
-UPLOAD_FOLDER = '/Users/dotdj/Desktop/web-projects/Flask tutorial/flaskr/static/upload/'
+UPLOAD_FOLDER = '/Users/dotdj/Desktop/web-projects/CS50BirWri/flaskr/static/upload/'
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
 
 def create_app(test_config=None):
