@@ -18,10 +18,11 @@ CREATE TABLE post (
   FOREIGN KEY (author_id) REFERENCES user (id)
 );
 
-CREATE TABLE canvas (
+CREATE TABLE comments (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  uploader_id INTEGER NOT NULL,
+  commenter_id INTEGER NOT NULL,
+  post_id INTEGER NOT NULL,
   created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  path_1 TEXT NOT NULL,
-  FOREIGN KEY (uploader_id) REFERENCES user (id)
+  body TEXT NOT NULL,
+  FOREIGN KEY (post_id) REFERENCES post (id)
 );
