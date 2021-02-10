@@ -22,8 +22,13 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
   <!-- TinuMCE-->
+  <!-- <script src="static/tinymce_5.6.2_dev/tinymce/js/tinymce/tinymce.min.js"></script>-->
+
+
+  <script src="{{ url_for('static', filename='tinymce_5.6.2_dev/tinymce/js/tinymce/tinymce.min.js') }}"></script>
+
   
-  <script src="static/tinymce_5.6.2_dev/tinymce/js/tinymce/tinymce.min.js"></script>
+
   
   <script type="text/javascript">
     tinymce.init({
@@ -32,7 +37,8 @@
       
       height: 500,
       
-      toolbar: 'undo redo  | code '
+      toolbar: 'undo redo  | code ',
+
     });
     </script>
 

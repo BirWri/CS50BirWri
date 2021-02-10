@@ -20,6 +20,7 @@ from . import ALLOWED_EXTENSIONS, UPLOAD_FOLDER
 
 bp = Blueprint('blog', __name__)
 
+
 @bp.route('/')
 def index():
     if g.user is None:
@@ -64,7 +65,7 @@ def post():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
-            path_1 = 'static/upload/'+filename
+            path_1 = 'upload/'+filename
             #path_1 = UPLOAD_FOLDER+filename
             
             if not body:
@@ -94,9 +95,9 @@ def post():
         return render_template('blog/post.html')
 
 
-def get_post(id, check_author=True):
+def get_post(id):
     entry = get_db().execute(
-        'SELECT p.id, title, body, created, author_id, username'
+        'SELECT p.id, title, body, created, author_id, path_1, username'
         ' FROM post p JOIN user u ON p.author_id = u.id'
         ' WHERE p.id = ?',
         (id,)
@@ -104,9 +105,6 @@ def get_post(id, check_author=True):
 
     if entry is None:
         abort(404, "Post id {0} doesn't exist.".format(id))
-
-    if check_author and entry['author_id'] != g.user['id']:
-        abort(403)
 
     return entry
 
@@ -138,7 +136,42 @@ def update(id):
 
     return render_template('blog/update.html', post=entry)
 
+################################################################
 
+#look into this
+#https://stackoverflow.com/questions/52105439/adding-comments-to-a-flask-blog-webapp
+@bp.route('/<int:id>/reply', methods=('GET', 'POST'))
+@login_required
+def reply(id):
+    blog_post = get_post(id)
+    #blog_post = request.args.get('id')
+    print(blog_post)
+
+
+
+    if request.method == 'POST':
+        title = request.form['title']
+        body = request.form['body']
+        error = None
+
+        if not title:
+            error = 'Title is required.'
+
+        if error is not None:
+            flash(error)
+        else:
+            db = get_db()
+            db.execute(
+                'INSERT INTO comments (commenter_id, post_id, body)'
+                ' VALUES (?, ?, ?)',
+                (g.user['id'] , id, body)
+            )
+            db.commit()
+            return redirect(url_for('blog.index'))
+
+    return render_template('blog/reply.html', post=blog_post)
+
+###################################################################
 @bp.route('/<int:id>/delete', methods=('POST',))
 @login_required
 def delete(id):
