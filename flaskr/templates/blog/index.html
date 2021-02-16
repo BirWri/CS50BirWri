@@ -95,7 +95,7 @@
       {% endif %}
 
       <form action="{{ url_for('blog.reply', id=post.post_id) }}">
-        <button type="submit" class="btn btn-primary">Reply ( TODO )</button>
+        <button type="submit" class="btn btn-primary">Reply (  {{post['post_id']|number_of_comments}} )</button>
       </form>
 
     </article>

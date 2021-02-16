@@ -15,7 +15,7 @@ from wtforms.validators import InputRequired, Length
 import re
 import os
 
-from . import ALLOWED_EXTENSIONS, UPLOAD_FOLDER
+from . import ALLOWED_EXTENSIONS, UPLOAD_FOLDER, number_of_comments
 
 # retrives all comments connected to posts...
 #SELECT username, post_id, author_id, comment_created, comment_body, post_title, post_body, post_created 
@@ -49,16 +49,6 @@ def index():
       
         return render_template('blog/index.html', posts=posts, comments = comments)
 
-#def number_of_comments(post_id):
-
-    #db = get_db()
-    #number_of_comments = db.execute(
-            #'SELECT COUNT (OG_post_id)'
-            #' FROM comments'
-           # ' WHERE post_id = OG_post_id'
-        #).fetchall()
-    
-    #return(number_of_comments)
 
 # https://www.kevin7.net/post_detail/tinymce-and-flask
 #https://pypi.org/project/bleach/

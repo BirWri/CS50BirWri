@@ -3,6 +3,8 @@ import os
 from flask import Flask
 from auth import login_required
 
+from helpers import number_of_comments 
+
 
 # to run the application
 # export FLASK_APP=flaskr
@@ -19,11 +21,15 @@ ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
+
+    # Ensure templates are auto-reloaded
+    app.config["TEMPLATES_AUTO_RELOAD"] = True
     app.config.from_mapping(
         SECRET_KEY='dev',
         DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite')
     )
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+    app.jinja_env.filters['number_of_comments'] = number_of_comments
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
