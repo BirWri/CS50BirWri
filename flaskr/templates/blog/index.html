@@ -22,8 +22,8 @@
 
           <header>
             <div>
-              <h2>{{ post['title'] }}</h2>
-              <div class="about">by {{ post['username'] }} on {{ post['created'].strftime('%Y-%m-%d') }}</div>
+              <h2>{{ post['post_title'] }}</h2>
+              <div class="about">by {{ post['username'] }} on {{ post['post_created'].strftime('%Y-%m-%d') }}</div>
             </div>
         </div>
 
@@ -53,7 +53,7 @@
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <form action="{{ url_for('blog.delete', id=post['id']) }}" method="post">
+                    <form action="{{ url_for('blog.delete', id=post['post_id']) }}" method="post">
                       <button type="submit" class="btn btn-primary">Save changes</button>
                     </form>
 
@@ -63,11 +63,11 @@
             </div>
 
 
-            <li class="nav-item"><a class="nav-link" href="{{ url_for('blog.update', id=post['id']) }}"
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('blog.update', id=post['post_id']) }}"
                 role="button">Edit</a></li>
 
             <li class="nav-item">
-              <form action="{{ url_for('blog.delete', id=post['id']) }}" method="post">
+              <form action="{{ url_for('blog.delete', id=post['post_id']) }}" method="post">
                 <a class="nav-link" type="button" data-toggle="modal" data-target="#myModal">Delete</a>
               </form>
             </li>
@@ -80,27 +80,23 @@
       </div>
 
 
-      {% if post['path_1'] != 'empthy' %}
+      {% if post['post_image'] != 'empthy' %}
 
       <!-- <img src="{{post.path_1}}" class="card-img-top"> -->
-      <img src="{{url_for('static', filename=post.path_1)}}" class="card-img-top">
+      <img src="{{url_for('static', filename=post.post_image)}}" class="card-img-top">
 
       {% endif %}
 
 
 
-      {% if post['body'] != 'empthy' %}
-      <p class="body">{{ post['body'] }}</p>
+      {% if post['post_body'] != 'empthy' %}
+      <p class="body">{{ post['post_body'] }}</p>
 
       {% endif %}
 
-      <form action="{{ url_for('blog.reply', id=post.id) }}">
-
-        <button type="submit" class="btn btn-primary">Reply</button>
+      <form action="{{ url_for('blog.reply', id=post.post_id) }}">
+        <button type="submit" class="btn btn-primary">Reply ( TODO )</button>
       </form>
-
-
-
 
     </article>
   </div>

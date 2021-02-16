@@ -17,8 +17,16 @@ import os
 
 from . import ALLOWED_EXTENSIONS, UPLOAD_FOLDER
 
+# retrives all comments connected to posts...
+#SELECT username, post_id, author_id, comment_created, comment_body, post_title, post_body, post_created 
+#FROM post 
+#JOIN user ON post.author_id = user.user_id
+#JOIN comments ON comments.OG_post_id = post.post_id ORDER BY post_created DESC
+
+
 
 bp = Blueprint('blog', __name__)
+
 
 
 @bp.route('/')
@@ -28,13 +36,31 @@ def index():
     else: 
         db = get_db()
         posts = db.execute(
-            'SELECT p.id, title, body, created, author_id, username, path_1'
-            ' FROM post p JOIN user u ON p.author_id = u.id'
-            ' ORDER BY created DESC'
+            'SELECT post_id, post_title, post_body, post_created, author_id, username, post_image'
+            ' FROM post JOIN user ON post.author_id = user.user_id'
+            ' ORDER BY post_created DESC'
         ).fetchall()
-        return render_template('blog/index.html', posts=posts)
 
-#https://www.kevin7.net/post_detail/tinymce-and-flask
+        comments = db.execute(
+           'SELECT comment_id, commentor_id, OG_post_id, comment_created, comment_title, comment_body'
+            ' FROM comments JOIN post ON comments.OG_post_id = post.post_id'
+            ' ORDER BY post_created DESC'
+        ).fetchall()
+      
+        return render_template('blog/index.html', posts=posts, comments = comments)
+
+#def number_of_comments(post_id):
+
+    #db = get_db()
+    #number_of_comments = db.execute(
+            #'SELECT COUNT (OG_post_id)'
+            #' FROM comments'
+           # ' WHERE post_id = OG_post_id'
+        #).fetchall()
+    
+    #return(number_of_comments)
+
+# https://www.kevin7.net/post_detail/tinymce-and-flask
 #https://pypi.org/project/bleach/
 #https://www.tiny.cloud/blog/bootstrap-wysiwyg-editor/
 #https://www.tiny.cloud/docs/general-configuration-guide/upload-images/
@@ -65,7 +91,7 @@ def post():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
-            path_1 = 'upload/'+filename
+            post_image = 'upload/'+filename
             #path_1 = UPLOAD_FOLDER+filename
             
             if not body:
@@ -73,20 +99,20 @@ def post():
 
             db = get_db()
             db.execute(
-                'INSERT INTO post (title, body, author_id, path_1)'
-                ' VALUES (?, ?, ?, ?)',
-                (title, body, g.user['id'],  path_1)
+                'INSERT INTO post (post_title, post_body, author_id, post_image, comment)'
+                ' VALUES (?, ?, ?, ?, ?)',
+                (title, body, g.user['user_id'],  post_image, 0)
             )
             db.commit()
             return redirect("/")
 
-        path_1 = "empthy"
+        post_image = "empthy"
             
         db = get_db()
         db.execute(
-            'INSERT INTO post (title, body, author_id, path_1)'
-            ' VALUES (?, ?, ?, ?)',
-            (title, body, g.user['id'],  path_1)
+            'INSERT INTO post (post_title, post_body, author_id, post_image, comment)'
+            ' VALUES (?, ?, ?, ?, ?)',
+            (title, body, g.user['user_id'], post_image, 0)
         )
         db.commit()
         return redirect("/")
@@ -97,9 +123,9 @@ def post():
 
 def get_post(id):
     entry = get_db().execute(
-        'SELECT p.id, title, body, created, author_id, path_1, username'
-        ' FROM post p JOIN user u ON p.author_id = u.id'
-        ' WHERE p.id = ?',
+        'SELECT p.post_id, post_title, post_body, post_created, author_id, username, post_image, comment'
+        ' FROM post p JOIN user u ON p.author_id = u.user_id'
+        ' WHERE p.post_id = ?',
         (id,)
     ).fetchone()
 
@@ -127,8 +153,8 @@ def update(id):
         else:
             db = get_db()
             db.execute(
-                'UPDATE post SET title = ?, body = ?'
-                ' WHERE id = ?',
+                'UPDATE post SET post_title = ?, post_body = ?'
+                ' WHERE post_id = ?',
                 (title, body, id)
             )
             db.commit()
@@ -144,14 +170,14 @@ def update(id):
 @login_required
 def reply(id):
     blog_post = get_post(id)
-    #blog_post = request.args.get('id')
     print(blog_post)
 
-
-
     if request.method == 'POST':
+
         title = request.form['title']
         body = request.form['body']
+       
+
         error = None
 
         if not title:
@@ -162,9 +188,9 @@ def reply(id):
         else:
             db = get_db()
             db.execute(
-                'INSERT INTO comments (commenter_id, post_id, body)'
-                ' VALUES (?, ?, ?)',
-                (g.user['id'] , id, body)
+                'INSERT INTO comments (commentor_id, OG_post_id, comment_body, comment_title)'
+                ' VALUES (?, ?, ?, ?)',
+                (g.user['user_id'] , id, body, title)
             )
             db.commit()
             return redirect(url_for('blog.index'))
@@ -172,12 +198,26 @@ def reply(id):
     return render_template('blog/reply.html', post=blog_post)
 
 ###################################################################
+
+def get_comments(id):
+    entry = get_db().execute(
+        'SELECT *'
+        ' FROM comments'
+        ' WHERE post_id = ?',
+        (id,)
+    )
+
+    if entry is None:
+        abort(404, "Post id {0} doesn't exist.".format(id))
+
+    return entry
+
 @bp.route('/<int:id>/delete', methods=('POST',))
 @login_required
 def delete(id):
     get_post(id)
     db = get_db()
-    db.execute('DELETE FROM post WHERE id = ?', (id,))
+    db.execute('DELETE FROM post WHERE post_id = ?', (id,))
     db.commit()
     return redirect(url_for('blog.index'))
 
