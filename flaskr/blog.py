@@ -159,13 +159,17 @@ def update(id):
 @bp.route('/<int:id>/reply', methods=('GET', 'POST'))
 @login_required
 def reply(id):
+
+    clean = re.compile('<.*?>')
     blog_post = get_post(id)
-    print(blog_post)
+    comments = get_comments(id)
+    print(comments)
 
     if request.method == 'POST':
 
         title = request.form['title']
-        body = request.form['body']
+        body = re.sub(clean, '', request.form['body'])
+        clean = re.compile('<.*?>')
        
 
         error = None
@@ -185,7 +189,7 @@ def reply(id):
             db.commit()
             return redirect(url_for('blog.index'))
 
-    return render_template('blog/reply.html', post=blog_post)
+    return render_template('blog/reply.html', post=blog_post, comments=comments)
 
 ###################################################################
 
@@ -193,7 +197,7 @@ def get_comments(id):
     entry = get_db().execute(
         'SELECT *'
         ' FROM comments'
-        ' WHERE post_id = ?',
+        ' WHERE OG_post_id = ?',
         (id,)
     )
 
