@@ -14,6 +14,8 @@ from wtforms.validators import InputRequired, Length
 
 import re
 import os
+import cv2
+import numpy as np
 
 from . import ALLOWED_EXTENSIONS, UPLOAD_FOLDER, number_of_comments
 
