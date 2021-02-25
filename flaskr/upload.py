@@ -4,6 +4,9 @@ from werkzeug.utils import secure_filename
 from flask import current_app
 from flaskr.db import get_db
 
+import cv2
+import numpy as np
+
 
 from . import ALLOWED_EXTENSIONS, UPLOAD_FOLDER
 
@@ -33,19 +36,18 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
-            path_1 = UPLOAD_FOLDER+filename
+            post_image = 'upload/'+filename
             print(path_1)
 
             #save the path in db
+        
             db = get_db()
             db.execute(
-                'INSERT INTO canvas (uploader_id, path_1)'
-                ' VALUES (?, ?)',
-                (g.user['id'], path_1)
+                'INSERT INTO post (post_title, author_id, post_image)'
+                ' VALUES (?, ?, ?)',
+                (title, g.user['user_id'],  post_image)
             )
             db.commit()
-            #return redirect(url_for('uploaded_file',
-                                    #filename=filename))
             return redirect("/")
     else:                                
         return render_template('upload/upload.html')

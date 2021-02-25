@@ -1,4 +1,6 @@
 from flaskr.db import get_db
+from PIL import ImageFilter
+
 
 def number_of_comments(post_id):
 
@@ -22,3 +24,8 @@ def number_of_comments(post_id):
     print (number_of_comments)
     
     return(number_of_comments)
+
+def blur(file):
+        
+        file=file.filter(ImageFilter.BLUR)
+        return(file)

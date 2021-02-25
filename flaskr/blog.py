@@ -14,10 +14,9 @@ from wtforms.validators import InputRequired, Length
 
 import re
 import os
-import cv2
-import numpy as np
+from PIL import ImageFilter
 
-from . import ALLOWED_EXTENSIONS, UPLOAD_FOLDER, number_of_comments
+from . import ALLOWED_EXTENSIONS, UPLOAD_FOLDER, number_of_comments, blur
 
 # retrives all comments connected to posts...
 #SELECT username, post_id, author_id, comment_created, comment_body, post_title, post_body, post_created 
@@ -71,6 +70,8 @@ def post():
         title = request.form['title']
         body = re.sub(clean, '', request.form['body'])
         file = request.files['file']
+
+        
 
         error = None
 

@@ -3,7 +3,7 @@ import os
 from flask import Flask
 from auth import login_required
 
-from helpers import number_of_comments 
+from helpers import number_of_comments, blur
 
 
 # to run the application
