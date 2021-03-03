@@ -16,7 +16,7 @@ import re
 import os
 from PIL import ImageFilter
 
-from . import ALLOWED_EXTENSIONS, UPLOAD_FOLDER, number_of_comments, blur
+from . import ALLOWED_EXTENSIONS, UPLOAD_FOLDER, number_of_comments
 
 # retrives all comments connected to posts...
 #SELECT username, post_id, author_id, comment_created, comment_body, post_title, post_body, post_created 
@@ -60,18 +60,54 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@bp.route('/post', methods=('GET', 'POST'))
+@bp.route('/post')
 @login_required
 def post():
+    
+    return render_template('blog/post_selection.html')
+
+@bp.route('/title_body', methods=('GET', 'POST'))
+@login_required
+def title_body():
     if request.method == 'POST':
-        
+
         clean = re.compile('<.*?>')
 
         title = request.form['title']
         body = re.sub(clean, '', request.form['body'])
+        error = None
+
+        if not title:
+            error = 'Title is required.'
+
+        if error is not None:
+            flash(error)
+
+         # has to add this due to NOT NULL in db
+        post_image = "empthy"
+            
+        db = get_db()
+        db.execute(
+            'INSERT INTO post (post_title, post_body, author_id, post_image, comment)'
+            ' VALUES (?, ?, ?, ?, ?)',
+            (title, body, g.user['user_id'], post_image, 0)
+        )
+        db.commit()
+        return redirect("/")
+
+    else:
+        return render_template('blog/title_body.html')
+
+
+@bp.route('/title_image', methods=('GET', 'POST'))
+@login_required
+def title_image():
+    if request.method == 'POST':
+
+
+        title = request.form['title']
         file = request.files['file']
 
-        
 
         error = None
 
@@ -80,6 +116,49 @@ def post():
 
         if error is not None:
             flash(error)
+
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+            post_image = 'upload/'+filename
+            #path_1 = UPLOAD_FOLDER+filename
+            
+            # has to add this due to NOT NULL in db
+            body = "empthy"
+
+            db = get_db()
+            # can remove cooment column from db
+            db.execute(
+                'INSERT INTO post (post_title, post_body, author_id, post_image, comment)'
+                ' VALUES (?, ?, ?, ?, ?)',
+                (title, body, g.user['user_id'],  post_image, 0)
+            )
+            db.commit()
+            return redirect("/")
+
+    else:
+        return render_template('blog/title_image.html')
+
+@bp.route('/title_image_text', methods=('GET', 'POST'))
+@login_required
+def title_image_text():
+    if request.method == 'POST':
+
+        clean = re.compile('<.*?>')
+
+        title = request.form['title']
+        body = re.sub(clean, '', request.form['body'])
+        file = request.files['file']
+
+        error = None
+
+        if not title:
+            error = 'Title is required.'
+
+        if error is not None:
+            flash(error)
+
+        # TODO I feel i am missing some erroor hooks over here....
 
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
@@ -99,19 +178,10 @@ def post():
             db.commit()
             return redirect("/")
 
-        post_image = "empthy"
-            
-        db = get_db()
-        db.execute(
-            'INSERT INTO post (post_title, post_body, author_id, post_image, comment)'
-            ' VALUES (?, ?, ?, ?, ?)',
-            (title, body, g.user['user_id'], post_image, 0)
-        )
-        db.commit()
-        return redirect("/")
-
     else:
-        return render_template('blog/post.html')
+        return render_template('blog/title_image_text.html')
+
+
 
 
 def get_post(id):
@@ -216,6 +286,7 @@ def delete(id):
     db = get_db()
     db.execute('DELETE FROM post WHERE post_id = ?', (id,))
     db.commit()
+    flash ('Post deleted')
     return redirect(url_for('blog.index'))
 
 # change password 

@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+<script>
+  // To see the name of the imagien without the full directory
+  function pr() {
+    
+    var path = document.getElementById('image').value;
+    var filename = path.replace(/^.*\\/, "");
+    document.getElementById("result").innerHTML = filename;
+  };
+
+  // if no file has been chosen, then have a Select file line.
+  function SelectFileText() {
+ 
+  document.getElementById("result").innerHTML = "Select image...";
+  }
+
+  function preview() {
+    frame.src=URL.createObjectURL(event.target.files[0]);
+}
+
+function refreshpage() {
+  window.location.reload();
+
+}
+
+
+</script>
+
+ 
+    
+    <div class="container" id="UploadPlacement">
+    
+      <div class="row">
+        <div class="col">
+        
+          <h1 style="color:white">New post</h1>
+    
+        </div>
+      </div>
+    
+      
+
+    
+
+        <div class="row">
+          <div class="col">
+    
+        
+          <form method="post" enctype="multipart/form-data">
+
+            <div class="container mt-4 mb-4">
+                <div class="row justify-content-md-center">
+                  <div class="col-md-12 col-lg-12">
+
+
+                    <div class="form-group">
+                        <input autocomplete="off" autofocus class="form-control" name="title" id="title" placeholder="Title" type="text" value="{{ request.form['title'] }}" style="width: 100%;" required>
+                      </div>
+
+                    <!--http://datahacker.rs/002-opencv-projects-how-to-cartoonize-an-image-with-opencv-in-python/-->
+                    <!--https://www.askaswiss.com/2016/01/how-to-create-cartoon-effect-opencv-python.html-->
+                    <!--https://pillow.readthedocs.io/en/5.1.x/reference/ImageFilter.html-->
+                    <!--https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_table_of_contents_imgproc/py_table_of_contents_imgproc.html-->
+                    <!--https://towardsdatascience.com/turn-photos-into-cartoons-using-python-bb1a9f578a7e-->
+
+                    <div class="custom-file">           
+                      <input type="file" class="custom-file-input" name="file" placeholder="file" id="file" oninput="pr()"  onchange="preview()">
+                      <label class="custom-file-label" for="image" ><span id="result"></span></label>
+                    </div>
+
+                    <div class="container" style=" padding-left:0px;  padding-right:0px">
+                      <img id="frame" style="padding-top:20px; padding-bottom:20px;" />
+                    </div>
+
+                
+                    
+                    <div class="form-group">
+                      <textarea name="body" placeholder="Leave a comment here" id="body">{{ request.form['body'] }}</textarea>
+                    </div>
+
+                   
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-secondary" style="margin-bottom: 20px; margin-top: 20px;" onclick="refreshpage()">Cancel</button>
+                   
+
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+    </div> 
+{% endblock %}

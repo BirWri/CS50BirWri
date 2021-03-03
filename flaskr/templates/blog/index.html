@@ -3,7 +3,7 @@
 {% block header %}
 <hr>
 <div class="card">
-  <h1>{% block title %} Welcome {% endblock %}</h1>
+  <h1 style="text-align: center;">{% block title %} Welcome, {{ g.user['username'] }} {% endblock %}</h1>
 </div>
 {% endblock %}
 
@@ -30,7 +30,7 @@
         {% if g.user['user_id'] == post['author_id'] %}
         <div class="col">
 
-          <a class="nav-link" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-expanded="false">
+          <a class="nav-link" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots"
               viewBox="0 0 16 16">
               <path
@@ -40,13 +40,27 @@
 
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 
-            <!-- Modal: can it be moved to base.html?-->
+            
+
+
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('blog.update', id=post['post_id']) }}"
+                role="button">Edit</a></li>
+
+            <li class="nav-item">
+              <form action="{{ url_for('blog.delete', id=post['post_id']) }}" method="post">
+                <a class="nav-link" type="button" data-toggle="modal" data-target="#myModal">Delete</a>
+              </form>
+            </li>
+
+          </ul>
+
+          <!-- Modal: can it be moved to base.html?-->
             <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
                     <h5 class="modal-title" id="myModalLabel">Delete post</h5>
-                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
                     Are you sure you want to delete this post?
@@ -63,16 +77,6 @@
             </div>
 
 
-            <li class="nav-item"><a class="nav-link" href="{{ url_for('blog.update', id=post['post_id']) }}"
-                role="button">Edit</a></li>
-
-            <li class="nav-item">
-              <form action="{{ url_for('blog.delete', id=post['post_id']) }}" method="post">
-                <a class="nav-link" type="button" data-toggle="modal" data-target="#myModal">Delete</a>
-              </form>
-            </li>
-
-          </ul>
         </div>
         {% endif %}
 

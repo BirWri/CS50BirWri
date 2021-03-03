@@ -16,45 +16,94 @@
 
 
 <!-- The original post -->
-  <div class="card mb-3" id="card">
-    <div class="card-body">
-      <article class="post">
+<div class="card mb-3" id="card">
+  <div class="card-body">
+    <article class="post">
 
-        <div class="row">
-          <div class="col-11">
+      <div class="row">
+        <div class="col-11">
 
-            <header>
-              <div>
-                <h2>{{ post['post_title'] }}</h2>
-                <div class="about">by {{ post['username'] }} on {{ post['post_created'].strftime('%Y-%m-%d') }}</div>
+          <header>
+            <div>
+              <h2>{{ post['post_title'] }}</h2>
+              <div class="about">by {{ post['username'] }} on {{ post['post_created'].strftime('%Y-%m-%d') }}</div>
+            </div>
+        </div>
+
+        {% if g.user['user_id'] == post['author_id'] %}
+        <div class="col">
+
+          <a class="nav-link" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-expanded="false">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots"
+              viewBox="0 0 16 16">
+              <path
+                d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
+            </svg>
+          </a>
+
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+
+            
+
+
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('blog.update', id=post['post_id']) }}"
+                role="button">Edit</a></li>
+
+            <li class="nav-item">
+              <form action="{{ url_for('blog.delete', id=post['post_id']) }}" method="post">
+                <a class="nav-link" type="button" data-toggle="modal" data-target="#myModal">Delete</a>
+              </form>
+            </li>
+
+          </ul>
+
+          <!-- Modal: can it be moved to base.html?-->
+          <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="myModalLabel">Delete post</h5>
+                  <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  Are you sure you want to delete this post?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <form action="{{ url_for('blog.delete', id=post['post_id']) }}" method="post">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                  </form>
+
+                </div>
               </div>
+            </div>
           </div>
 
 
-          </header>
         </div>
-
-
-        {% if post['post_image'] != 'empthy' %}
-
-        <!-- <img src="{{post.path_1}}" class="card-img-top"> -->
-        <img src="{{url_for('static', filename=post.post_image)}}" class="card-img-top">
-
-
-
         {% endif %}
 
+        </header>
+      </div>
 
 
-        {% if post['post_body'] != 'empthy' %}
-        <p class="body">{{ post['post_body'] }}</p>
+      {% if post['post_image'] != 'empthy' %}
 
-        {% endif %}
+      <!-- <img src="{{post.path_1}}" class="card-img-top"> -->
+      <img src="{{url_for('static', filename=post.post_image)}}" class="card-img-top">
+
+      {% endif %}
 
 
-      </article>
-    </div>
+
+      {% if post['post_body'] != 'empthy' %}
+      <p class="body">{{ post['post_body'] }}</p>
+
+      {% endif %}
+
+    </article>
   </div>
+</div>
 
 <!-- The comments -->
 
@@ -87,28 +136,6 @@
 
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 
-            <!-- Modal: can it be moved to base.html?-->
-            <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="myModalLabel">Delete post</h5>
-                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    Are you sure you want to delete this post?
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <form action="{{ url_for('blog.delete', id=post['post_id']) }}" method="post">
-                      <button type="submit" class="btn btn-primary">Save changes</button>
-                    </form>
-
-                  </div>
-                </div>
-              </div>
-            </div>
-
 
             <li class="nav-item"><a class="nav-link" href="{{ url_for('blog.update', id=post['post_id']) }}"
                 role="button">Edit</a></li>
@@ -120,6 +147,29 @@
             </li>
 
           </ul>
+          
+          <!-- Modal: can it be moved to base.html?-->
+          <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="myModalLabel">Delete post</h5>
+                  <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  Are you sure you want to delete this post?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <form action="{{ url_for('blog.delete', id=post['post_id']) }}" method="post">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                  </form>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
         {% endif %}
 

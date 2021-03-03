@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    
+<div class="row" style="margin-left: 100px;">
+
+    <div class="col" style="flex-grow: 0;">
+
+            <div div class="card mb-3" style="width: 18rem; height: 18rem;">
+                <div class="card-body">
+                <header>
+                    <div>
+                      <h2>Post title</h2>
+                      <div class="about">by [username] on [date and time]</div>
+                    </div>
+                </header>
+                  <p class="body" style="padding-top: 10px;">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+            </div>          
+      
+
+        <a class="btn btn-primary" href="{{ url_for('blog.title_body') }}" role="button" style="margin-left: 110px;">Create</a>
+    </div>
+
+    <div class="col" style="flex-grow: 0;">
+
+        <div div class="card mb-3" style="width: 18rem; height: 18rem;">
+            <div class="card-body">
+            <header>
+                <div>
+                  <h2>Post title</h2>
+                  <div class="about">by [username] on [date and time]</div>
+                </div>
+            </header>
+            <img src="{{ url_for('static', filename='flower.jpg') }}" class="card-img-top" style="width: 15.5rem; height: 9rem; padding-top: 5px;">
+            
+        </div>   
+    </div>
+        <a class="btn btn-primary" href="{{ url_for('blog.title_image') }}" role="button" style="margin-left: 110px;">Create</a>
+    </div>
+
+    <div class="col" style="flex-grow: 0;">
+
+        <div div class="card mb-3" style="width: 18rem; height: 18rem;">
+            <div class="card-body" >
+                <header>
+                    <div>
+                    <h2>Post title</h2>
+                    <div class="about">by [username] on [date and time]</div>
+                    </div>
+                </header>
+
+                <img src="{{ url_for('static', filename='flower.jpg') }}" class="card-img-top" style="width: 15.5rem; height: 9rem;">
+
+                
+                <p class="card-text" >Some quick example text ...</p>
+               
+            </div>
+        </div>   
+        <a class="btn btn-primary" href="{{ url_for('blog.title_image_text') }}" role="button" style="margin-left: 110px;">Create</a>
+    </div>
+    
+</div> 
+
+    
+
+{% endblock %}

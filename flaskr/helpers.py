@@ -25,7 +25,4 @@ def number_of_comments(post_id):
     
     return(number_of_comments)
 
-def blur(file):
-        
-        file=file.filter(ImageFilter.BLUR)
-        return(file)
+
