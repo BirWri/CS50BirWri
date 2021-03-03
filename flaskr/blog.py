@@ -197,6 +197,18 @@ def get_post(id):
 
     return entry
 
+def get_comments(id):
+    entry = get_db().execute(
+        'SELECT *'
+        ' FROM comments'
+        ' WHERE OG_post_id = ?',
+        (id,)
+    )
+
+    if entry is None:
+        abort(404, "Post id {0} doesn't exist.".format(id))
+
+    return entry
 
 @bp.route('/<int:id>/update', methods=('GET', 'POST'))
 @login_required
@@ -266,18 +278,6 @@ def reply(id):
 
 ###################################################################
 
-def get_comments(id):
-    entry = get_db().execute(
-        'SELECT *'
-        ' FROM comments'
-        ' WHERE OG_post_id = ?',
-        (id,)
-    )
-
-    if entry is None:
-        abort(404, "Post id {0} doesn't exist.".format(id))
-
-    return entry
 
 @bp.route('/<int:id>/delete', methods=('POST',))
 @login_required
@@ -288,6 +288,9 @@ def delete(id):
     db.commit()
     flash ('Post deleted')
     return redirect(url_for('blog.index'))
+
+
+#####################################################################
 
 # change password 
 @bp.route("/PasswordChange", methods=["GET", "POST"])

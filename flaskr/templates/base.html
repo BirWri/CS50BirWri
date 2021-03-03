@@ -5,31 +5,20 @@
 <head>
   <!-- Required meta tags -->
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+ 
+ <!-- Bootstrap CSS 4.6-->
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
 
-     <!-- JavaScript Bundle with Popper -->
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-     
-
-   <!-- For the dropdown menu funcrion to work correctly-->
-   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-
-   <!-- IF I REMOVE THIS, THE DROPDOWN MENU WORKS EVERYWHERE< BUT AN URL NOT FOUND HAPPENS ON INDEX PAGE with setting button and upload picture-->
-   <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>-->
-
-
-  <!-- Bootstrap documentation -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
   <!-- My own file form the tutorial-->
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
   <!-- TinuMCE-->
-  <!-- <script src="static/tinymce_5.6.2_dev/tinymce/js/tinymce/tinymce.min.js"></script>-->
-
-
   <script src="{{ url_for('static', filename='tinymce_5.6.2_dev/tinymce/js/tinymce/tinymce.min.js') }}"></script>
 
+
+  
 
   <script>
   var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'))
@@ -62,6 +51,13 @@ var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
 
 
 <body onload="SelectFileText()">
+
+<!-- Bootstrap CSS 4.6-->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
+
+
 
 <!-- Header and  Navbar -->
 <header class="navbar navbar-expand-md navbar-light bg-white" id="nav">
@@ -96,7 +92,7 @@ var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
             <ul class="navbar-nav flex-row flex-wrap bd-navbar-nav pt-2 py-md-0 ">
               <div class="dropdown">
                   <!-- Username Needs styling -->
-                  <a class="nav-link" href="/settings" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-gear" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <a class="nav-link" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-expanded="false"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-gear" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" d="M8.837 1.626c-.246-.835-1.428-.835-1.674 0l-.094.319A1.873 1.873 0 0 1 4.377 3.06l-.292-.16c-.764-.415-1.6.42-1.184 1.185l.159.292a1.873 1.873 0 0 1-1.115 2.692l-.319.094c-.835.246-.835 1.428 0 1.674l.319.094a1.873 1.873 0 0 1 1.115 2.693l-.16.291c-.415.764.42 1.6 1.185 1.184l.292-.159a1.873 1.873 0 0 1 2.692 1.116l.094.318c.246.835 1.428.835 1.674 0l.094-.319a1.873 1.873 0 0 1 2.693-1.115l.291.16c.764.415 1.6-.42 1.184-1.185l-.159-.291a1.873 1.873 0 0 1 1.116-2.693l.318-.094c.835-.246.835-1.428 0-1.674l-.319-.094a1.873 1.873 0 0 1-1.115-2.692l.16-.292c.415-.764-.42-1.6-1.185-1.184l-.291.159A1.873 1.873 0 0 1 8.93 1.945l-.094-.319zm-2.633-.283c.527-1.79 3.065-1.79 3.592 0l.094.319a.873.873 0 0 0 1.255.52l.292-.16c1.64-.892 3.434.901 2.54 2.541l-.159.292a.873.873 0 0 0 .52 1.255l.319.094c1.79.527 1.79 3.065 0 3.592l-.319.094a.873.873 0 0 0-.52 1.255l.16.292c.893 1.64-.902 3.434-2.541 2.54l-.292-.159a.873.873 0 0 0-1.255.52l-.094.319c-.527 1.79-3.065 1.79-3.592 0l-.094-.319a.873.873 0 0 0-1.255-.52l-.292.16c-1.64.893-3.433-.902-2.54-2.541l.159-.292a.873.873 0 0 0-.52-1.255l-.319-.094c-1.79-.527-1.79-3.065 0-3.592l.319-.094a.873.873 0 0 0 .52-1.255l-.16-.292c-.892-1.64.902-3.433 2.541-2.54l.292.159a.873.873 0 0 0 1.255-.52l.094-.319z"/>
                     <path fill-rule="evenodd" d="M8 5.754a2.246 2.246 0 1 0 0 4.492 2.246 2.246 0 0 0 0-4.492zM4.754 8a3.246 3.246 0 1 1 6.492 0 3.246 3.246 0 0 1-6.492 0z"/>
                     </svg></a>
@@ -126,6 +122,7 @@ var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
   </nav>
 </header>
 
+
 <!-- From tutorial, Main content of page-->
 <main style="margin-top:20px;">
   <div class="container" id="MainContent" > 
@@ -136,9 +133,11 @@ var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
 
     {% if get_flashed_messages() %}
               <header tabindex="-1">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                   <div class="alert alert-danger border text-center" role="alert">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                       {{ get_flashed_messages() | join(" ") }}
-                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                      
                   </div>
               </header>
     {% endif %}
@@ -158,7 +157,7 @@ var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
 <footer class="small text-center text-muted" >
   {% block footer %}{% endblock %}
 </footer>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+
 </body>
 
 </html>
