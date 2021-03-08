@@ -298,33 +298,33 @@ def reply(id):
 def delete_post(id):
     get_post(id)
     db = get_db()
+    
     db.execute('DELETE FROM post WHERE post_id = ?', (id,))
     db.commit()
+
     db.execute('DELETE FROM comments WHERE OG_post_id = ?', (id,))
     db.commit()
+
     flash ('Post deleted')
     return redirect(url_for('blog.index'))
     
 ###################################################################
 
-@bp.route('/<int:id>/delete_comment', methods=('GET', 'POST'))
+@bp.route('/<int:id>/delete_comment', methods=('POST',))
 @login_required
 def delete_comment(id):
 
     comment = get_comment(id)
     print(comment)
 
-    if request.method == 'POST':
+    db = get_db()
 
-        db = get_db()
-
-        db.execute('DELETE FROM comments WHERE comment_id = ?', (id,))
-        db.commit()
+    db.execute('DELETE FROM comments WHERE comment_id = ?', (id,))
+    db.commit()
         
-        flash ('Comment deleted')
-        return redirect(url_for('blog.index'))
+    flash ('Comment deleted')
+    return redirect(url_for('blog.index'))
     
-    return render_template('blog/delete_comment.html', comment=comment)
 ###################################################################
 
 # change password 
