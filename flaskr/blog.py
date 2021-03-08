@@ -319,11 +319,22 @@ def delete_comment(id):
 
     db = get_db()
 
+    post_id = get_db().execute(
+        'SELECT OG_post_id'
+        ' FROM comments'
+        ' WHERE comment_id = ?',
+        (id,)
+    ).fetchone()
+
+    print(post_id[0])
+   
+    
     db.execute('DELETE FROM comments WHERE comment_id = ?', (id,))
+    
     db.commit()
         
     flash ('Comment deleted')
-    return redirect(url_for('blog.index'))
+    return redirect(url_for('blog.reply', id=post_id[0]))
     
 ###################################################################
 
