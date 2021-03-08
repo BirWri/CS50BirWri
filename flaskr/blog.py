@@ -224,14 +224,18 @@ def get_comment(id):
 
     return entry
 
+# WORKING HERE
+################################################################
 @bp.route('/<int:id>/update', methods=('GET', 'POST'))
 @login_required
 def update(id):
     entry = get_post(id)
 
     if request.method == 'POST':
+        
+        clean = re.compile('<.*?>')
         title = request.form['title']
-        body = request.form['body']
+        body = re.sub(clean, '', request.form['body'])
         error = None
 
         if not title:
@@ -290,7 +294,6 @@ def reply(id):
 
     return render_template('blog/reply.html', post=blog_post, comments=comments)
 
-###################################################################
 
 
 @bp.route('/<int:id>/delete_post', methods=('POST',))
@@ -307,8 +310,7 @@ def delete_post(id):
 
     flash ('Post deleted')
     return redirect(url_for('blog.index'))
-    
-###################################################################
+
 
 @bp.route('/<int:id>/delete_comment', methods=('POST',))
 @login_required
@@ -336,7 +338,6 @@ def delete_comment(id):
     flash ('Comment deleted')
     return redirect(url_for('blog.reply', id=post_id[0]))
     
-###################################################################
 
 # change password 
 @bp.route("/PasswordChange", methods=["GET", "POST"])
