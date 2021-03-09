@@ -62,7 +62,7 @@
 
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 
-            <li class="nav-item"><a class="nav-link" href="{{ url_for('blog.update', id=post['post_id']) }}"
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('blog.update_post', id=post['post_id']) }}"
                 role="button">Edit</a></li>
 
             <li class="nav-item">
@@ -98,7 +98,7 @@
       {% endif %}
 
       <form action="{{ url_for('blog.reply', id=post.post_id) }}">
-        <button type="submit" class="btn btn-primary">Reply (  {{post['post_id']|number_of_comments}} )</button>
+        <button type="submit" class="btn btn-primary"> Comment (  {{post['post_id']|number_of_comments}} )</button>
       </form>
 
     </article>

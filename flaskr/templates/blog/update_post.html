@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<script>
+  // To see the name of the imagien without the full directory
+  function pr() {
+    
+    var path = document.getElementById('image').value;
+    var filename = path.replace(/^.*\\/, "");
+    document.getElementById("result").innerHTML = filename;
+  };
+
+  // if no file has been chosen, then have a Select file line.
+  function SelectFileText() {
+ 
+  document.getElementById("result").innerHTML = "Select image...";
+  }
+
+  function preview() {
+    frame.src=URL.createObjectURL(event.target.files[0]);
+}
+
+function refreshpage() {
+  window.location.reload();
+
+}
+
+
+</script>
+
+<div class="container" id="UploadPlacement" style="padding-top:20px;">
+
+<div class="row">
+  <div class="col">
+  
+    <h1 style="color:white">Edit "{{ post['post_title'] }}"</h1>
+
+  </div>
+</div>
+
+<div class="row">
+  <div class="col">
+
+
+  <form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+      <input autocomplete="off" autofocus class="form-control" name="title" id="title" placeholder="Title" type="text" value="{{ request.form['title'] or post['post_title'] }}" style="width: 100%;" required>
+    </div>
+
+    <div class="custom-file">           
+      <input type="file" class="custom-file-input" name="file" value="{{ request.form['file'] or post['post_image'] }}" placeholder="file" id="file" oninput="pr()"  onchange="preview()">
+      <label class="custom-file-label" for="image" ><span id="result"></span></label>
+    </div>
+
+    <div class="container" style=" padding-left:0px;  padding-right:0px">
+      <img id="frame" style="padding-top:20px; padding-bottom:20px;" />
+    </div>
+
+    {% if post['post_image'] != 'empthy' %}
+
+      <!-- <img src="{{post.path_1}}" class="card-img-top"> -->
+      <img src="{{url_for('static', filename=post.post_image)}}" class="card-img-top">
+
+    {% endif %}
+
+    
+    <div class="form-floating">
+      <textarea class="form-control" placeholder="Leave a comment here" name="body" id="body" style="width: 100%; height: 400px;">{{ request.form['body'] or post['post_body'] }}</textarea>
+
+    </div>
+
+  </div>
+</div>
+
+    <div class="row">
+      <div class="col">
+    
+    <button class="btn btn-primary" type="submit" >Save</button>
+    <a type="button" class="btn btn-secondary" href="{{ url_for('blog.index') }}"> Cancel </a>
+  </form>
+
+</div>
+</div>
+
+</div>
+  
+{% endblock %}

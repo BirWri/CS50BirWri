@@ -14,17 +14,9 @@ from wtforms.validators import InputRequired, Length
 
 import re
 import os
-from PIL import ImageFilter
+
 
 from . import ALLOWED_EXTENSIONS, UPLOAD_FOLDER, number_of_comments
-
-# retrives all comments connected to posts...
-#SELECT username, post_id, author_id, comment_created, comment_body, post_title, post_body, post_created 
-#FROM post 
-#JOIN user ON post.author_id = user.user_id
-#JOIN comments ON comments.OG_post_id = post.post_id ORDER BY post_created DESC
-
-
 
 bp = Blueprint('blog', __name__)
 
@@ -224,11 +216,9 @@ def get_comment(id):
 
     return entry
 
-# WORKING HERE
-################################################################
-@bp.route('/<int:id>/update', methods=('GET', 'POST'))
+@bp.route('/<int:id>/update_post', methods=('GET', 'POST'))
 @login_required
-def update(id):
+def update_post(id):
     entry = get_post(id)
 
     if request.method == 'POST':
@@ -236,6 +226,8 @@ def update(id):
         clean = re.compile('<.*?>')
         title = request.form['title']
         body = re.sub(clean, '', request.form['body'])
+        file = request.files['file']
+
         error = None
 
         if not title:
@@ -243,17 +235,57 @@ def update(id):
 
         if error is not None:
             flash(error)
+        
         else:
+
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+            post_image = 'upload/'+filename
             db = get_db()
             db.execute(
-                'UPDATE post SET post_title = ?, post_body = ?'
+                'UPDATE post SET post_title = ?, post_body = ?, post_image= ? '
                 ' WHERE post_id = ?',
+                (title, body, post_image, id)
+            )
+            db.commit()
+            return redirect(url_for('blog.index'))
+
+    return render_template('blog/update_post.html', post=entry)
+
+# WORKING HERE
+################################################################
+
+@bp.route('/<int:id>/update_comment', methods=('GET', 'POST'))
+@login_required
+def update_comment(id):
+    entry = get_comment(id)
+
+    if request.method == 'POST':
+        
+        clean = re.compile('<.*?>')
+        title = request.form['title']
+        body = re.sub(clean, '', request.form['body'])
+
+        error = None
+
+        if not title:
+            error = 'Title is required.'
+
+        if error is not None:
+            flash(error)
+        
+        else:
+
+            db = get_db()
+            db.execute(
+                'UPDATE comments SET comment_title = ?, comment_body = ? '
+                ' WHERE comment_id = ?',
                 (title, body, id)
             )
             db.commit()
             return redirect(url_for('blog.index'))
 
-    return render_template('blog/update.html', post=entry)
+    return render_template('blog/update_comment.html', comment=entry)
 
 ################################################################
 
@@ -316,6 +348,7 @@ def delete_post(id):
 @login_required
 def delete_comment(id):
 
+    print(id)
     comment = get_comment(id)
     print(comment)
 
