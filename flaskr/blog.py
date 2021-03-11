@@ -15,10 +15,17 @@ from wtforms.validators import InputRequired, Length
 import re
 import os
 
+import jinja2
+
 
 from . import ALLOWED_EXTENSIONS, UPLOAD_FOLDER, number_of_comments
 
 bp = Blueprint('blog', __name__)
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 
@@ -48,15 +55,53 @@ def index():
 #https://www.tiny.cloud/blog/bootstrap-wysiwyg-editor/
 #https://www.tiny.cloud/docs/general-configuration-guide/upload-images/
 # new post entry
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @bp.route('/post')
 @login_required
 def post():
     
     return render_template('blog/post_selection.html')
+
+def get_post(id):
+    entry = get_db().execute(
+        'SELECT p.post_id, post_title, post_body, post_created, author_id, username, post_image, comment'
+        ' FROM post p JOIN user u ON p.author_id = u.user_id'
+        ' WHERE p.post_id = ?',
+        (id,)
+    ).fetchone()
+
+    if entry is None:
+        abort(404, "Post id {0} doesn't exist.".format(id))
+
+    return entry
+
+def get_comments(id):
+    entry = get_db().execute(
+        'SELECT *'
+        ' FROM comments'
+        ' WHERE OG_post_id = ?',
+        (id,)
+    )
+
+    if entry is None:
+        abort(404, "Post id {0} doesn't exist.".format(id))
+
+    return entry
+
+def get_comment(id):
+    entry = get_db().execute(
+        'SELECT *'
+        ' FROM comments'
+        ' WHERE comment_id = ?',
+        (id,)
+    ).fetchone()
+
+
+    if entry is None:
+        abort(404, "Post id {0} doesn't exist.".format(id))
+
+    return entry
+
 
 @bp.route('/title_body', methods=('GET', 'POST'))
 @login_required
@@ -175,46 +220,6 @@ def title_image_text():
 
 
 
-
-def get_post(id):
-    entry = get_db().execute(
-        'SELECT p.post_id, post_title, post_body, post_created, author_id, username, post_image, comment'
-        ' FROM post p JOIN user u ON p.author_id = u.user_id'
-        ' WHERE p.post_id = ?',
-        (id,)
-    ).fetchone()
-
-    if entry is None:
-        abort(404, "Post id {0} doesn't exist.".format(id))
-
-    return entry
-
-def get_comments(id):
-    entry = get_db().execute(
-        'SELECT *'
-        ' FROM comments'
-        ' WHERE OG_post_id = ?',
-        (id,)
-    )
-
-    if entry is None:
-        abort(404, "Post id {0} doesn't exist.".format(id))
-
-    return entry
-
-def get_comment(id):
-    entry = get_db().execute(
-        'SELECT *'
-        ' FROM comments'
-        ' WHERE comment_id = ?',
-        (id,)
-    ).fetchone()
-
-
-    if entry is None:
-        abort(404, "Post id {0} doesn't exist.".format(id))
-
-    return entry
 
 @bp.route('/<int:id>/update_post', methods=('GET', 'POST'))
 @login_required
