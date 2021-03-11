@@ -228,6 +228,18 @@ def update_post(id):
         body = re.sub(clean, '', request.form['body'])
         file = request.files['file']
 
+        if not file:
+            db = get_db()
+            db.execute(
+                'UPDATE post SET post_title = ?, post_body = ? '
+                ' WHERE post_id = ?',
+                (title, body, id)
+            )
+            db.commit()
+            return redirect(url_for('blog.index'))
+
+        file = request.files['file']
+
         error = None
 
         if not title:
@@ -252,8 +264,6 @@ def update_post(id):
 
     return render_template('blog/update_post.html', post=entry)
 
-# WORKING HERE
-################################################################
 
 @bp.route('/<int:id>/update_comment', methods=('GET', 'POST'))
 @login_required
@@ -265,6 +275,7 @@ def update_comment(id):
         clean = re.compile('<.*?>')
         title = request.form['title']
         body = re.sub(clean, '', request.form['body'])
+        post_id = request.form.get('post_id')
 
         error = None
 
@@ -283,11 +294,10 @@ def update_comment(id):
                 (title, body, id)
             )
             db.commit()
-            return redirect(url_for('blog.index'))
+            return redirect(url_for('blog.reply', id=post_id))
 
     return render_template('blog/update_comment.html', comment=entry)
 
-################################################################
 
 #look into this
 #https://stackoverflow.com/questions/52105439/adding-comments-to-a-flask-blog-webapp
@@ -298,14 +308,16 @@ def reply(id):
     clean = re.compile('<.*?>')
     blog_post = get_post(id)
     comments = get_comments(id)
-    print(comments)
 
     if request.method == 'POST':
 
         title = request.form['title']
         body = re.sub(clean, '', request.form['body'])
         clean = re.compile('<.*?>')
-       
+        post_id = request.form.get('post_id')
+
+        print('post_id') 
+        print(post_id) 
 
         error = None
 
@@ -322,7 +334,7 @@ def reply(id):
                 (g.user['user_id'] , id, body, title)
             )
             db.commit()
-            return redirect(url_for('blog.index'))
+            return redirect(url_for('blog.reply', id=post_id))
 
     return render_template('blog/reply.html', post=blog_post, comments=comments)
 
@@ -348,9 +360,7 @@ def delete_post(id):
 @login_required
 def delete_comment(id):
 
-    print(id)
     comment = get_comment(id)
-    print(comment)
 
     db = get_db()
 
@@ -360,8 +370,6 @@ def delete_comment(id):
         ' WHERE comment_id = ?',
         (id,)
     ).fetchone()
-
-    print(post_id[0])
    
     
     db.execute('DELETE FROM comments WHERE comment_id = ?', (id,))
