@@ -110,7 +110,7 @@
           <header>
             <div>
               <h2>{{ comment['comment_title'] }}</h2>
-              <div class="about">by {{ comment['commentor_id'] }} on {{ comment['comment_created'].strftime('%Y-%m-%d') }}</div>
+              <div class="about">by {{ comment['username'] }} on {{ comment['comment_created'].strftime('%Y-%m-%d') }}</div>
               
             </div>
         </div>
@@ -138,7 +138,9 @@
 
           </ul>
 
-          <!-- comment_Modal-->
+          <!-- https://www.reddit.com/r/django/comments/efk16v/bootstrap_modal_in_for_loop/-->
+          <!-- The comments modal-->
+
           <div class="modal fade" id="confirm-delete-{{ comment['comment_id'] }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">

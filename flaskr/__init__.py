@@ -16,6 +16,7 @@ from helpers import number_of_comments
 
 
 UPLOAD_FOLDER = '/Users/dotdj/Desktop/web-projects/CS50BirWri/flaskr/static/upload/'
+# SHOULD I DELETE THIS HERE OR WIL THIS BE ADDED TO THE CONFIG.PY?
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
 
 def create_app(test_config=None):
@@ -47,6 +48,10 @@ def create_app(test_config=None):
 
     # db connection
     from . import db
+    db.init_app(app)
+
+    # db connection
+    from . import helpers
     db.init_app(app)
 
     # authentication

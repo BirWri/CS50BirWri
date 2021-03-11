@@ -8,27 +8,17 @@ from werkzeug.utils import secure_filename
 from flaskr.auth import login_required
 from flaskr.db import get_db
 
-from flask_wtf import FlaskForm
-from wtforms import StringField, validators, TextAreaField, SubmitField
-from wtforms.validators import InputRequired, Length
-
 import re
 import os
 
-import jinja2
+from . import UPLOAD_FOLDER
+from helpers import get_comments, number_of_comments, get_post, get_comment, allowed_file
 
-
-from . import ALLOWED_EXTENSIONS, UPLOAD_FOLDER, number_of_comments
 
 bp = Blueprint('blog', __name__)
 
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
-
+###### ROUTES ######
+###### INDEX ######
 @bp.route('/')
 def index():
     if g.user is None:
@@ -50,59 +40,20 @@ def index():
         return render_template('blog/index.html', posts=posts, comments = comments)
 
 
-# https://www.kevin7.net/post_detail/tinymce-and-flask
-#https://pypi.org/project/bleach/
-#https://www.tiny.cloud/blog/bootstrap-wysiwyg-editor/
-#https://www.tiny.cloud/docs/general-configuration-guide/upload-images/
-# new post entry
-
+###### LANDING PAGE ######
 @bp.route('/post')
 @login_required
 def post():
     
     return render_template('blog/post_selection.html')
 
-def get_post(id):
-    entry = get_db().execute(
-        'SELECT p.post_id, post_title, post_body, post_created, author_id, username, post_image, comment'
-        ' FROM post p JOIN user u ON p.author_id = u.user_id'
-        ' WHERE p.post_id = ?',
-        (id,)
-    ).fetchone()
-
-    if entry is None:
-        abort(404, "Post id {0} doesn't exist.".format(id))
-
-    return entry
-
-def get_comments(id):
-    entry = get_db().execute(
-        'SELECT *'
-        ' FROM comments'
-        ' WHERE OG_post_id = ?',
-        (id,)
-    )
-
-    if entry is None:
-        abort(404, "Post id {0} doesn't exist.".format(id))
-
-    return entry
-
-def get_comment(id):
-    entry = get_db().execute(
-        'SELECT *'
-        ' FROM comments'
-        ' WHERE comment_id = ?',
-        (id,)
-    ).fetchone()
-
-
-    if entry is None:
-        abort(404, "Post id {0} doesn't exist.".format(id))
-
-    return entry
-
-
+## Link from where i got ideas for implementation of the blog concept and TinyMCE.
+# https://www.kevin7.net/post_detail/tinymce-and-flask
+#https://pypi.org/project/bleach/
+#https://www.tiny.cloud/blog/bootstrap-wysiwyg-editor/
+#https://www.tiny.cloud/docs/general-configuration-guide/upload-images/
+# new post entry
+###### BLOG POST WITHOUT IMAGE ######
 @bp.route('/title_body', methods=('GET', 'POST'))
 @login_required
 def title_body():
@@ -135,7 +86,7 @@ def title_body():
     else:
         return render_template('blog/title_body.html')
 
-
+###### BLOG POST WITH TITLE AND IMAGE ######
 @bp.route('/title_image', methods=('GET', 'POST'))
 @login_required
 def title_image():
@@ -176,6 +127,7 @@ def title_image():
     else:
         return render_template('blog/title_image.html')
 
+###### BLOG POST WITH TITLE, IMAGE AND TEXT ######
 @bp.route('/title_image_text', methods=('GET', 'POST'))
 @login_required
 def title_image_text():
@@ -218,8 +170,7 @@ def title_image_text():
     else:
         return render_template('blog/title_image_text.html')
 
-
-
+###### EDIT/UPDATE POST ######
 
 @bp.route('/<int:id>/update_post', methods=('GET', 'POST'))
 @login_required
@@ -269,6 +220,7 @@ def update_post(id):
 
     return render_template('blog/update_post.html', post=entry)
 
+###### EDIT/UPDATE COMMENT ######
 
 @bp.route('/<int:id>/update_comment', methods=('GET', 'POST'))
 @login_required
@@ -304,7 +256,8 @@ def update_comment(id):
     return render_template('blog/update_comment.html', comment=entry)
 
 
-#look into this
+###### COMMENT ON A POST ######
+#I got help and inspiration from the following link
 #https://stackoverflow.com/questions/52105439/adding-comments-to-a-flask-blog-webapp
 @bp.route('/<int:id>/reply', methods=('GET', 'POST'))
 @login_required
@@ -344,7 +297,7 @@ def reply(id):
     return render_template('blog/reply.html', post=blog_post, comments=comments)
 
 
-
+###### DELETE POST ######
 @bp.route('/<int:id>/delete_post', methods=('POST',))
 @login_required
 def delete_post(id):
@@ -360,7 +313,7 @@ def delete_post(id):
     flash ('Post deleted')
     return redirect(url_for('blog.index'))
 
-
+###### DELETE COMMENT ######
 @bp.route('/<int:id>/delete_comment', methods=('POST',))
 @login_required
 def delete_comment(id):
@@ -384,8 +337,7 @@ def delete_comment(id):
     flash ('Comment deleted')
     return redirect(url_for('blog.reply', id=post_id[0]))
     
-
-# change password 
+###### CHANGE PASSWORD ###### 
 @bp.route("/PasswordChange", methods=["GET", "POST"])
 @login_required
 def PasswordChange():
