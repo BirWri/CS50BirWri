@@ -2,7 +2,9 @@
 
 {% block content %}
     
-
+     <!-- Form to recieve username and password for db chaeck -->
+     <!-- pt-4 is from Bootstrap and means padding top size 4 -->
+     <!-- https://getbootstrap.com/docs/4.6/utilities/spacing/ -->
     <div class="container pt-4" id="LoginPlacement">
        
         
@@ -10,6 +12,7 @@
             
             <form method="post">
                 <div class="form-group">
+                    <!-- required means, that it must be filled to be able to submit. Empthy input field trigger a little pop up to appear with a reminder -->
                     <input autocomplete="off" autofocus class="form-control" name="username" id="username" placeholder="Username" type="text" required>
                 </div>
                 <div class="form-group">

@@ -9,11 +9,14 @@
 
 {% block content %}
 
-
+<!-- <hr> prints a line -->
 <hr>
 {% for post in posts %}
 
-<!-- Modal -->
+<!-- Modal for deleting posts-->
+<!-- It is a notification box, to confirm that the user wants to delete the choicen post -->
+<!-- Each post needs to have a unique id for the modal to work and modal code needs to be top-level position to avoid potential interference from other elements.-->
+<!-- https://getbootstrap.com/docs/4.6/components/modal/ -->
 <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -35,13 +38,21 @@
   </div>
 </div>
 
+<!-- The beginning of the index page html-->
+<!-- Using card element from Bootstrap-->
+<!-- https://getbootstrap.com/docs/4.6/components/card/-->
+
 <div class="card mb-3" id="card">
   <div class="card-body">
+    <!-- What is <article> tag used for? -->
     <article class="post">
 
+      <!-- Using Bootstrap grid system for easy and neat layout. This is row 1, where title, username and edit button are located-->
+      <!-- https://getbootstrap.com/docs/4.6/layout/grid/ -->
       <div class="row">
         <div class="col-11">
 
+          <!-- The first part below is seen for every user -->
           <header>
             <div>
               <h2>{{ post['post_title'] }}</h2>
@@ -49,9 +60,11 @@
             </div>
         </div>
 
+        <!-- custom styleing for the landing page h1 -->
         {% if g.user['user_id'] == post['author_id'] %}
         <div class="col">
 
+          <!-- custom styleing for the landing page h1 -->
           <a class="nav-link" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-expanded="false">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots"
               viewBox="0 0 16 16">
@@ -60,11 +73,13 @@
             </svg>
           </a>
 
+          <!-- custom styleing for the landing page h1 -->
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-
+            <!-- custom styleing for the landing page h1 -->
             <li class="nav-item"><a class="nav-link" href="{{ url_for('blog.update_post', id=post['post_id']) }}"
                 role="button">Edit</a></li>
-
+            
+            <!-- custom styleing for the landing page h1 -->
             <li class="nav-item">
               <form action="{{ url_for('blog.delete_post', id=post['post_id']) }}" method="post">
                 <a class="nav-link" type="button" data-toggle="modal" data-target="#myModal">Delete</a>
@@ -72,9 +87,6 @@
             </li>
 
           </ul>
-
-         
-
 
         </div>
         {% endif %}
@@ -97,6 +109,7 @@
 
       {% endif %}
 
+      <!-- custom styleing for the landing page h1 -->
       <form action="{{ url_for('blog.reply', id=post.post_id) }}">
         <button type="submit" class="btn btn-primary"> Comment (  {{post['post_id']|number_of_comments}} )</button>
       </form>
