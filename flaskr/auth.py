@@ -7,29 +7,32 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from flaskr.db import get_db
 from functools import wraps
 
+from wtforms import Form, BooleanField, StringField, PasswordField, validators
+
+
+
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
-# register new user
-@bp.route('/register', methods=('GET', 'POST'))
+class RegistrationForm(Form):
+    username = StringField('Username', [validators.Length(min=4, max=25)])
+    password = PasswordField('New Password', [
+        validators.DataRequired(),
+        validators.EqualTo('confirm', message='Passwords must match')
+    ])
+    confirm = PasswordField('Repeat Password')
+    accept_tos = BooleanField('I accept the TOS', [validators.DataRequired()])
+
+@bp.route('/register', methods=['GET', 'POST'])
 def register():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        password2 = request.form['password2']
+    form = RegistrationForm(request.form)
+    if request.method == 'POST' and form.validate():
+        username = form.username.data
+        password = form.password.data
+
+        print(username)
+        print(password)
 
         db = get_db()
-        error = None
-
-        if not username:
-            error = 'Username is required.'
-        elif not password:
-            error = 'Password is required.'
-        elif db.execute(
-            'SELECT user_id FROM user WHERE username = ?', (username,)
-        ).fetchone() is not None:
-            error = 'User {} is already registered.'.format(username)
-        elif password != password2:
-            error = 'Passwords did not match.'
 
         if error is None:
             db.execute(
@@ -37,11 +40,46 @@ def register():
                 (username, generate_password_hash(password))
             )
             db.commit()
+            flash('Thank you for registering')
             return redirect(url_for('auth.login'))
 
         flash(error)
+      
+    return render_template('auth/register.html', form=form)
 
-    return render_template('auth/register.html')
+# register new user
+#@bp.route('/register', methods=('GET', 'POST'))
+#def register():
+    #if request.method == 'POST':
+       # username = request.form['username']
+       # password = request.form['password']
+       # password2 = request.form['password2']
+
+       # db = get_db()
+       # error = None
+
+       # if not username:
+       #     error = 'Username is required.'
+       # elif not password:
+        #    error = 'Password is required.'
+        #elif db.execute(
+        #    'SELECT user_id FROM user WHERE username = ?', (username,)
+        #).fetchone() is not None:
+        #    error = 'User {} is already registered.'.format(username)
+        #elif password != password2:
+       #     error = 'Passwords did not match.'
+
+        #if error is None:
+         #   db.execute(
+         #       'INSERT INTO user (username, password) VALUES (?, ?)',
+          #      (username, generate_password_hash(password))
+          #  )
+          #  db.commit()
+          #  return redirect(url_for('auth.login'))
+
+        #flash(error)
+
+    #return render_template('auth/register.html')
 
 
 # login form

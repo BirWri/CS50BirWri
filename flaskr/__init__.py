@@ -4,6 +4,7 @@ from flask import Flask
 from auth import login_required
 
 from helpers import number_of_comments
+from flask_bootstrap import Bootstrap
 
 
 # to run the application
@@ -31,6 +32,8 @@ def create_app(test_config=None):
     )
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     app.jinja_env.filters['number_of_comments'] = number_of_comments
+
+    Bootstrap(application)
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
