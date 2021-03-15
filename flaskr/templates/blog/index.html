@@ -1,3 +1,6 @@
+ <!--Index page with all users posts and navbar for few option for new posts, Three types of posts can be subbmitted by users:-->
+ <!--Title-image, Title-image-body or Title-body-->
+<!-- Under each post a hyperlink to comments is situated, which gives user the right to read others reply and also write one-->
 {% extends 'base.html' %}
 
 {% block header %}
@@ -12,31 +15,6 @@
 <!-- <hr> prints a line -->
 <hr>
 {% for post in posts %}
-
-<!-- Modal for deleting posts-->
-<!-- It is a notification box, to confirm that the user wants to delete the choicen post -->
-<!-- Each post needs to have a unique id for the modal to work and modal code needs to be top-level position to avoid potential interference from other elements.-->
-<!-- https://getbootstrap.com/docs/4.6/components/modal/ -->
-<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="myModalLabel">Delete post</h5>
-        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Are you sure you want to delete this post?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <form action="{{ url_for('blog.delete_post', id=post['post_id']) }}" method="post">
-          <button type="submit" class="btn btn-primary">Save changes</button>
-        </form>
-
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- The beginning of the index page html-->
 <!-- Using card element from Bootstrap-->
@@ -60,11 +38,11 @@
             </div>
         </div>
 
-        <!-- custom styleing for the landing page h1 -->
+        <!-- if it the logged in user post, they will have authority to either edit or delete a post -->
         {% if g.user['user_id'] == post['author_id'] %}
         <div class="col">
 
-          <!-- custom styleing for the landing page h1 -->
+          <!-- Three dots menu dropdown menu -->
           <a class="nav-link" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-expanded="false">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots"
               viewBox="0 0 16 16">
@@ -73,20 +51,43 @@
             </svg>
           </a>
 
-          <!-- custom styleing for the landing page h1 -->
+          <!-- dropdown menu list -->
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <!-- custom styleing for the landing page h1 -->
+            <!-- The first option is to edit the post, which is done by an hyperlink concept, which links to a route in blog.py-->
             <li class="nav-item"><a class="nav-link" href="{{ url_for('blog.update_post', id=post['post_id']) }}"
                 role="button">Edit</a></li>
             
-            <!-- custom styleing for the landing page h1 -->
-            <li class="nav-item">
-              <form action="{{ url_for('blog.delete_post', id=post['post_id']) }}" method="post">
-                <a class="nav-link" type="button" data-toggle="modal" data-target="#myModal">Delete</a>
-              </form>
-            </li>
+            <!-- The second option is deletation. By activating Delete button, modal pops up to confirm delete option. -->
+            <a  href="#confirm-delete-{{ post['post_id']}}" class="nav-link" type="button" data-toggle="modal">Delete post</a>
 
           </ul>
+
+          <!-- Modal for deleting posts-->
+          <!-- It is a notification box, to confirm that the user wants to delete the choicen post -->
+          <!-- Each post needs to have a unique id for the modal to work and modal code needs to be top-level position to avoid potential interference from other elements.-->
+          <!-- https://getbootstrap.com/docs/4.6/components/modal/ -->
+          <!-- https://www.reddit.com/r/django/comments/efk16v/bootstrap_modal_in_for_loop/-->
+
+          <div class="modal fade" id="confirm-delete-{{ post['post_id'] }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="myModalLabel">Delete post</h5>
+                  <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  Are you sure you want to delete "{{post['post_title']}}"" post?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <form action="{{ url_for('blog.delete_post', id=post['post_id']) }}" method="post">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                  </form>
+          
+                </div>
+              </div>
+            </div>
+          </div>
 
         </div>
         {% endif %}
@@ -94,22 +95,23 @@
         </header>
       </div>
 
-
+      <!--To check if the post has an image-->
       {% if post['post_image'] != 'empthy' %}
 
-      <!-- <img src="{{post.path_1}}" class="card-img-top"> -->
       <img src="{{url_for('static', filename=post.post_image)}}" class="card-img-top">
 
       {% endif %}
 
 
-
+      <!--To check if the post has an body -->
       {% if post['post_body'] != 'empthy' %}
+      
       <p class="body">{{ post['post_body'] }}</p>
 
       {% endif %}
 
-      <!-- custom styleing for the landing page h1 -->
+      <!-- Redirects user to a page with the orginal post and comments people have left. Also gives user to leave their own reply -->
+      <!-- {{post['post_id']|number_of_comments}} is a custom filter, to count how many comments a distinct post has -->
       <form action="{{ url_for('blog.reply', id=post.post_id) }}">
         <button type="submit" class="btn btn-primary"> Comment (  {{post['post_id']|number_of_comments}} )</button>
       </form>

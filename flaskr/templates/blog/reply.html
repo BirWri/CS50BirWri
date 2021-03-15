@@ -1,3 +1,5 @@
+<!-- Comment/Reply section, where first the Orginal post is show-->
+<!-- follwed by the comments, the particular post had anf lastly a reply option for the user in a form of a TinyMCE-->
 {% extends 'base.html' %}
 
 {% block content %}
@@ -6,7 +8,14 @@
 
 <div class="container" id="UploadPlacement" style="padding-top:20px;">
 
-  <!-- Post_Modal-->
+ 
+  <!-- Modal for deleting posts-->
+  <!-- It is a notification box, to confirm that the user wants to delete the choicen post -->
+  <!-- Each post needs to have a unique id for the modal to work and modal code needs to be top-level position to avoid potential interference from other elements.-->
+  <!-- In this case, there is only 1 distinct post, that can be deleted, so no special id is needed such as is the case on the index page for example-->
+  <!-- https://getbootstrap.com/docs/4.6/components/modal/ -->
+  <!-- https://www.reddit.com/r/django/comments/efk16v/bootstrap_modal_in_for_loop/-->
+
   <div class="modal fade" id="Post_Modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -29,11 +38,16 @@
   </div>
 
 
-<!-- The original post -->
+<!-- The original post retrieval and show casinf-->
+<!-- The beginning of the index page html-->
+<!-- Using card element from Bootstrap-->
+<!-- https://getbootstrap.com/docs/4.6/components/card/-->
 <div class="card mb-3" id="card">
   <div class="card-body">
     <article class="post">
-
+      
+      <!-- Using Bootstrap grid system for easy and neat layout. This is row 1, where title, username and edit button are located-->
+      <!-- https://getbootstrap.com/docs/4.6/layout/grid/ -->
       <div class="row">
         <div class="col-11">
 
@@ -44,9 +58,11 @@
             </div>
         </div>
 
+         <!-- if it the logged in user post, they will have authority to either edit or delete a post -->
         {% if g.user['user_id'] == post['author_id'] %}
         <div class="col">
 
+          <!-- Three dots menu dropdown menu -->
           <a class="nav-link" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-expanded="false">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots"
               viewBox="0 0 16 16">
@@ -55,17 +71,15 @@
             </svg>
           </a>
 
+          <!-- dropdown menu list -->
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 
-            
+            <!-- The first option is to edit the post, which is done by an hyperlink concept, which links to a route in blog.py-->
             <li class="nav-item"><a class="nav-link" href="{{ url_for('blog.update_post', id=post['post_id']) }}"
                 role="button">Edit</a></li>
-
-            <li class="nav-item">
-              <form action="{{ url_for('blog.delete_post', id=post['post_id']) }}" method="post">
-                <a class="nav-link" type="button" data-toggle="modal" data-target="#Post_Modal">Delete</a>
-              </form>
-            </li>
+            
+            <!-- The second option is deletation. By activating Delete button, modal pops up to confirm delete option. -->
+            <a  href="#Post_Modal" class="nav-link" type="button" data-toggle="modal">Delete post</a>
 
           </ul>
 
@@ -76,16 +90,15 @@
         </header>
       </div>
 
-
+      <!--To check if the post has an image-->
       {% if post['post_image'] != 'empthy' %}
 
-      <!-- <img src="{{post.path_1}}" class="card-img-top"> -->
       <img src="{{url_for('static', filename=post.post_image)}}" class="card-img-top">
 
       {% endif %}
 
 
-
+       <!--To check if the post has an body -->
       {% if post['post_body'] != 'empthy' %}
       <p class="body">{{ post['post_body'] }}</p>
 
@@ -95,7 +108,10 @@
   </div>
 </div>
 
-<!-- The comments -->
+<!-- The comments section -->
+<!-- forloop is used to showcase all the comments the post has -->
+<!-- The part are basically identical to the section above, except comments, cant have images-->
+
 
 {% for comment in comments %}
 
@@ -138,8 +154,11 @@
 
           </ul>
 
-          <!-- https://www.reddit.com/r/django/comments/efk16v/bootstrap_modal_in_for_loop/-->
-          <!-- The comments modal-->
+         <!-- Modal for deleting posts-->
+  <!-- It is a notification box, to confirm that the user wants to delete the choicen post -->
+  <!-- Each post needs to have a unique id for the modal to work and modal code needs to be top-level position to avoid potential interference from other elements.-->
+  <!-- https://getbootstrap.com/docs/4.6/components/modal/ -->
+  <!-- https://www.reddit.com/r/django/comments/efk16v/bootstrap_modal_in_for_loop/-->
 
           <div class="modal fade" id="confirm-delete-{{ comment['comment_id'] }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -186,7 +205,7 @@
 {% endfor %}
 
 
-<!-- The TinyMCE to write an answer -->
+<!-- WRITE S REPLY/COMMENT SECTION, where TinyMCE pluin is used to to write and submit an answer -->
   <div class="row">
     <div class="col">
 
