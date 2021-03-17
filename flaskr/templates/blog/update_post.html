@@ -46,6 +46,9 @@ function refreshpage() {
 
 
   <form method="post" enctype="multipart/form-data">
+
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    
     <div class="form-group">
       <input autocomplete="off" autofocus class="form-control" name="title" id="title" placeholder="Title" type="text" value="{{ request.form['title'] or post['post_title'] }}" style="width: 100%;" required>
     </div>

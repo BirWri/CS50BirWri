@@ -9,6 +9,8 @@ from functools import wraps
 
 from wtforms import Form, BooleanField, StringField, PasswordField, validators
 
+from extensions import csrf
+
 
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -28,6 +30,8 @@ def register():
     if request.method == 'POST' and form.validate():
         username = form.username.data
         password = form.password.data
+
+        error = None
 
         print(username)
         print(password)

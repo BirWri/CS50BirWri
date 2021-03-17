@@ -13,6 +13,9 @@
         <h1>Log in</h1>
             
             <form method="post">
+                 <!-- csrf_token  -->
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                
                 <div class="form-group">
                     <!-- required means, that it must be filled to be able to submit. Empthy input field trigger a little pop up to appear with a reminder -->
                     <input autocomplete="off" autofocus class="form-control" name="username" id="username" placeholder="Username" type="text" required>

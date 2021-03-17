@@ -5,6 +5,7 @@ from auth import login_required
 
 from helpers import number_of_comments
 from flask_bootstrap import Bootstrap
+from extensions import csrf
 
 
 # to run the application
@@ -13,8 +14,6 @@ from flask_bootstrap import Bootstrap
 # flask run
 # OR
 # python -m flask run
-
-
 
 UPLOAD_FOLDER = '/Users/dotdj/Desktop/web-projects/CS50BirWri/flaskr/static/upload/'
 # SHOULD I DELETE THIS HERE OR WIL THIS BE ADDED TO THE CONFIG.PY?
@@ -33,7 +32,15 @@ def create_app(test_config=None):
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     app.jinja_env.filters['number_of_comments'] = number_of_comments
 
-    Bootstrap(application)
+    Bootstrap(app)
+
+    # CSRF, which stands for Cross-Site Request Forgery, is an attack against a web application in which 
+    # the attacker attempts to trick an authenticated user into performing a malicious action. 
+    # https://testdriven.io/blog/csrf-flask/
+    # https://flask-wtf.readthedocs.io/en/stable/csrf.html
+
+    csrf.init_app(app)
+
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
@@ -55,7 +62,11 @@ def create_app(test_config=None):
 
     # db connection
     from . import helpers
-    db.init_app(app)
+  
+
+     # db connection
+    from . import extensions
+ 
 
     # authentication
     from . import auth
