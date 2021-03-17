@@ -16,38 +16,32 @@ from extensions import csrf
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 class RegistrationForm(Form):
-    username = StringField('Username', [validators.Length(min=4, max=25)])
+    username = StringField('Username', [validators.DataRequired(),validators.Length(min=4, max=25)])
     password = PasswordField('New Password', [
         validators.DataRequired(),
         validators.EqualTo('confirm', message='Passwords must match')
     ])
-    confirm = PasswordField('Repeat Password')
+    confirm = PasswordField('Repeat Password', [validators.DataRequired()])
     accept_tos = BooleanField('I accept the TOS', [validators.DataRequired()])
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm(request.form)
+    
+    
     if request.method == 'POST' and form.validate():
+
         username = form.username.data
         password = form.password.data
 
-        error = None
-
-        print(username)
-        print(password)
-
         db = get_db()
-
-        if error is None:
-            db.execute(
-                'INSERT INTO user (username, password) VALUES (?, ?)',
-                (username, generate_password_hash(password))
-            )
-            db.commit()
-            flash('Thank you for registering')
-            return redirect(url_for('auth.login'))
-
-        flash(error)
+        db.execute(
+            'INSERT INTO user (username, password) VALUES (?, ?)',
+            (username, generate_password_hash(password))
+        )
+        db.commit()
+        flash('Thank you for registering')
+        return redirect(url_for('auth.login'))
       
     return render_template('auth/register.html', form=form)
 

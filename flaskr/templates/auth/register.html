@@ -14,6 +14,16 @@
 <!-- https://getbootstrap.com/docs/4.6/utilities/spacing/ -->
 
 <!-- https://john.soban.ski/pass-bootstrap-html-attributes-to-flask-wtforms.html -->
+
+<!-- LOOK AT THIS ONE TOMRROW -->
+<!-- https://stackabuse.com/flask-form-validation-with-flask-wtf/ -->
+
+{% for field, errors in form.errors.items() %}
+    <small class="form-text text-muted ">
+        {{ ', '.join(errors) }}
+    </small>
+{% endfor %}
+
 <div class="container" id="RegisterPlacement">
     
   <h1>Register</h1>
@@ -21,9 +31,7 @@
     <!-- https://flask-wtf.readthedocs.io/en/stable/csrf.html -->
     <!--  https://testdriven.io/blog/csrf-flask/ -->
     <!-- LOOK INTO THE TOKEN-->
-    
  
-    
     <dl>
       <div class="container" >
       {{ wtf.form_field(form.username, class='form-control' , placeholder='Username') }}
@@ -41,6 +49,7 @@
     </dl>
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     <button class="btn btn-primary" type="submit" value="Register">Register</button>
+    
   </form>
 
   </div>
