@@ -41,6 +41,7 @@ def create_app(test_config=None):
 
     csrf.init_app(app)
 
+    # testing section
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
@@ -59,14 +60,6 @@ def create_app(test_config=None):
     # db connection
     from . import db
     db.init_app(app)
-
-    # db connection
-    from . import helpers
-  
-
-     # db connection
-    from . import extensions
- 
 
     # authentication
     from . import auth

@@ -102,7 +102,7 @@ var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
                         <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
                       </svg> {{ g.user['username'] }}</h3></li>
                       <li><hr class="dropdown-divider"></li>
-                      <li class="nav-item" ><a class="nav-link" href="{{ url_for('blog.PasswordChange') }}">Change Password</a></li>
+                      <li class="nav-item" ><a class="nav-link" href="{{ url_for('auth.PasswordChange') }}">Change Password</a></li>
                       <li class="nav-item" ><a class="nav-link" href="{{ url_for('auth.logout') }}">Log Out</a></li>
                     </ul>
               </div>

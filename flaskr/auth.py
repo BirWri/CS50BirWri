@@ -11,24 +11,10 @@ from wtforms import Form, BooleanField, StringField, PasswordField, validators, 
 
 from extensions import csrf
 
+from forms import ChangePasswordForm,  RegistrationForm, LoginForm
 
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
-
-##### FORMS ######
-class RegistrationForm(Form):
-    username = StringField('Username', [validators.DataRequired(),validators.Length(min=4, max=25)])
-    password = PasswordField('New Password', [
-        validators.DataRequired(),
-        validators.EqualTo('confirm', message='Passwords must match')
-    ])
-    confirm = PasswordField('Repeat Password', [validators.DataRequired()])
-    accept_tos = BooleanField('I accept the TOS', [validators.DataRequired()])
-
-class LoginForm(Form):
-    username = StringField('Username', [validators.DataRequired()])
-    password = PasswordField('Password', [validators.DataRequired()])
-    submit = SubmitField('Login')
 
 
 ##### FUNCTIONS ######
@@ -125,6 +111,57 @@ def load_logged_in_user():
             'SELECT * FROM user WHERE user_id = ?', (user_id,)
         ).fetchone()        
 
+###### CHANGE PASSWORD ###### 
+@bp.route("/PasswordChange", methods=["GET", "POST"])
+@login_required
+def PasswordChange():
+
+    form = ChangePasswordForm(request.form)
+
+    if request.method == 'POST':
+
+        username = form.username.data
+        old_password = form.old_password.data
+        new_password = form.new_password.data
+        confirm = form.confirm.data
+        
+
+        # all the checks
+        if old_password == new_password:
+            error = 'Old password cannot be the same as the new password'
+            flash(error)
+            return render_template('blog/PasswordChange.html', form=form) 
+           
+        if new_password != confirm:
+            error = 'Confirm new password'
+            flash(error)
+            return render_template('blog/PasswordChange.html', form=form) 
+
+        
+        # hash the new password
+        new_storage =  generate_password_hash(confirm)
+
+        #call the db for the user
+        db = get_db()
+        user = db.execute(
+            'SELECT * FROM user WHERE username = ?', (username,)
+        ).fetchone()
+
+        # verify the input
+        if user == None or not check_password_hash(user["password"], old_password):
+            error = "Incorrect username/old password"
+            flash(error)
+            return render_template('blog/PasswordChange.html', form=form) 
+
+
+        # update the db
+        db.execute('UPDATE user SET password = ? WHERE username = ? ', (new_storage, username))
+        db.commit()
+        
+        flash("You have successfully changed your password")
+        return redirect(url_for('index'))  
+
+    return render_template('blog/PasswordChange.html', form=form) 
 
 # log out
 @bp.route('/logout')

@@ -14,8 +14,6 @@ import os
 from . import UPLOAD_FOLDER
 from helpers import get_comments, number_of_comments, get_post, get_comment, allowed_file
 
-from forms import ChangePasswordForm
-
 
 bp = Blueprint('blog', __name__)
 
@@ -111,7 +109,6 @@ def title_image():
             filename = secure_filename(file.filename)
             file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
             post_image = 'upload/'+filename
-            #path_1 = UPLOAD_FOLDER+filename
             
             # has to add this due to NOT NULL in db
             body = "empthy"
@@ -331,7 +328,6 @@ def delete_comment(id):
         (id,)
     ).fetchone()
    
-    
     db.execute('DELETE FROM comments WHERE comment_id = ?', (id,))
     
     db.commit()
@@ -339,55 +335,4 @@ def delete_comment(id):
     flash ('Comment deleted')
     return redirect(url_for('blog.reply', id=post_id[0]))
     
-###### CHANGE PASSWORD ###### 
-@bp.route("/PasswordChange", methods=["GET", "POST"])
-@login_required
-def PasswordChange():
-
-    form = ChangePasswordForm(request.form)
-
-    if request.method == 'POST':
-
-        username = form.username.data
-        old_password = form.old_password.data
-        new_password = form.new_password.data
-        confirm = form.confirm.data
-        
-
-        # all the checks
-        if old_password == new_password:
-            error = 'Old password cannot be the same as the new password'
-            flash(error)
-            return render_template('blog/PasswordChange.html', form=form) 
-           
-        if new_password != confirm:
-            error = 'Confirm new password'
-            flash(error)
-            return render_template('blog/PasswordChange.html', form=form) 
-
-        
-        # hash the new password
-        new_storage =  generate_password_hash(confirm)
-
-        #call the db for the user
-        db = get_db()
-        user = db.execute(
-            'SELECT * FROM user WHERE username = ?', (username,)
-        ).fetchone()
-
-        # verify the input
-        if user == None or not check_password_hash(user["password"], old_password):
-            error = "Incorrect username/old password"
-            flash(error)
-            return render_template('blog/PasswordChange.html', form=form) 
-
-
-        # update the db
-        db.execute('UPDATE user SET password = ? WHERE username = ? ', (new_storage, username))
-        db.commit()
-        
-        flash("You have successfully changed your password")
-        return redirect(url_for('index'))  
-
-    return render_template('blog/PasswordChange.html', form=form) 
 
