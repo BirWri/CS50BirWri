@@ -1,8 +1,15 @@
  <!-- LOGIN page for the users -->
 
+<!-- REGISTER page for new users -->
+{% import "bootstrap/wtf.html" as wtf %}
+
 {% extends 'base.html' %}
 
 {% block content %}
+
+<style>
+    .control-label {display: none;}
+</style>
     
      <!-- Form to recieve username and password for db chaeck -->
      <!-- pt-4 is from Bootstrap and means padding top size 4 -->
@@ -15,15 +22,21 @@
             <form method="post">
                  <!-- csrf_token  -->
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <dl>
+                    <div class="container" >
+                    {{ wtf.form_field(form.username, class='form-control' , placeholder='Username') }}
+                  </div>
+                  <div class="container" >
+                    {{ wtf.form_field(form.password, class='form-control', placeholder='Password') }}
+                  </div>
+                  <div class="container" >
+                    {{ wtf.form_field(form.submit, class="btn btn-primary")  }}
+                  </div>
+              
+                  </dl>
                 
-                <div class="form-group">
-                    <!-- required means, that it must be filled to be able to submit. Empthy input field trigger a little pop up to appear with a reminder -->
-                    <input autocomplete="off" autofocus class="form-control" name="username" id="username" placeholder="Username" type="text" required>
-                </div>
-                <div class="form-group">
-                    <input class="form-control" name="password" placeholder="Password" type="password" id="password" required>
-                </div>
-                <button class="btn btn-primary" type="submit" value="Log In">Log in</button>
+                
             </form>
     </div>
 

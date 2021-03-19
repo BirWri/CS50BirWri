@@ -7,7 +7,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from flaskr.db import get_db
 from functools import wraps
 
-from wtforms import Form, BooleanField, StringField, PasswordField, validators
+from wtforms import Form, BooleanField, StringField, PasswordField, validators, SubmitField
 
 from extensions import csrf
 
@@ -15,6 +15,7 @@ from extensions import csrf
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
+##### FORMS ######
 class RegistrationForm(Form):
     username = StringField('Username', [validators.DataRequired(),validators.Length(min=4, max=25)])
     password = PasswordField('New Password', [
@@ -24,6 +25,40 @@ class RegistrationForm(Form):
     confirm = PasswordField('Repeat Password', [validators.DataRequired()])
     accept_tos = BooleanField('I accept the TOS', [validators.DataRequired()])
 
+class LoginForm(Form):
+    username = StringField('Username', [validators.DataRequired()])
+    password = PasswordField('Password', [validators.DataRequired()])
+    submit = SubmitField('Login')
+
+
+##### FUNCTIONS ######
+# require authetication in other views
+def login_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user is None:
+            return redirect(url_for('auth.login'))
+
+        return view(**kwargs)
+
+    return wrapped_view
+
+
+# at the beginning of each request, if a user is logged in their information
+# should be loaded and made available to other views.
+@bp.before_app_request
+def load_logged_in_user():
+    user_id = session.get('user_id')
+
+    if user_id is None:
+        g.user = None
+    else:
+        g.user = get_db().execute(
+            'SELECT * FROM user WHERE user_id = ?', (user_id,)
+        ).fetchone() 
+
+
+##### ROUTES ######
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm(request.form)
@@ -45,47 +80,17 @@ def register():
       
     return render_template('auth/register.html', form=form)
 
-# register new user
-#@bp.route('/register', methods=('GET', 'POST'))
-#def register():
-    #if request.method == 'POST':
-       # username = request.form['username']
-       # password = request.form['password']
-       # password2 = request.form['password2']
-
-       # db = get_db()
-       # error = None
-
-       # if not username:
-       #     error = 'Username is required.'
-       # elif not password:
-        #    error = 'Password is required.'
-        #elif db.execute(
-        #    'SELECT user_id FROM user WHERE username = ?', (username,)
-        #).fetchone() is not None:
-        #    error = 'User {} is already registered.'.format(username)
-        #elif password != password2:
-       #     error = 'Passwords did not match.'
-
-        #if error is None:
-         #   db.execute(
-         #       'INSERT INTO user (username, password) VALUES (?, ?)',
-          #      (username, generate_password_hash(password))
-          #  )
-          #  db.commit()
-          #  return redirect(url_for('auth.login'))
-
-        #flash(error)
-
-    #return render_template('auth/register.html')
 
 
 # login form
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
+    form = LoginForm(request.form)
+
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+        
+        username = form.username.data
+        password = form.password.data
         db = get_db()
         error = None
         user = db.execute(
@@ -104,7 +109,7 @@ def login():
 
         flash(error)
 
-    return render_template('auth/login.html')
+    return render_template('auth/login.html', form=form)
 
 
 # at the beginning of each request, if a user is logged in their information
@@ -127,13 +132,3 @@ def logout():
     session.clear()
     return redirect(url_for('index'))
 
-# require authetication in other views
-def login_required(view):
-    @functools.wraps(view)
-    def wrapped_view(**kwargs):
-        if g.user is None:
-            return redirect(url_for('auth.login'))
-
-        return view(**kwargs)
-
-    return wrapped_view
