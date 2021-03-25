@@ -161,7 +161,7 @@ def PasswordChange():
         flash("You have successfully changed your password")
         return redirect(url_for('index'))  
 
-    return render_template('blog/PasswordChange.html', form=form) 
+    return render_template('auth/PasswordChange.html', form=form) 
 
 # log out
 @bp.route('/logout')

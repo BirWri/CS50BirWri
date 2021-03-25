@@ -11,7 +11,7 @@ from flaskr.db import get_db
 import re
 import os
 
-from . import UPLOAD_FOLDER
+from config import UPLOAD_FOLDER
 from helpers import get_comments, number_of_comments, get_post, get_comment, allowed_file
 
 
@@ -116,9 +116,9 @@ def title_image():
             db = get_db()
             # can remove cooment column from db
             db.execute(
-                'INSERT INTO post (post_title, post_body, author_id, post_image, comment)'
-                ' VALUES (?, ?, ?, ?, ?)',
-                (title, body, g.user['user_id'],  post_image, 0)
+                'INSERT INTO post (post_title, post_body, author_id, post_image)'
+                ' VALUES (?, ?, ?, ?)',
+                (title, body, g.user['user_id'],  post_image)
             )
             db.commit()
             return redirect("/")

@@ -15,7 +15,6 @@ CREATE TABLE post (
   post_title TEXT NOT NULL,
   post_body TEXT NOT NULL,
   post_image TEXT NOT NULL,
-  comment INTEGER NOT NULL,
   FOREIGN KEY (author_id) REFERENCES user (user_id)
 );
 

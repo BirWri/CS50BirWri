@@ -47,7 +47,7 @@ def get_comments(id):
 
 def get_post(id):
     entry = get_db().execute(
-        'SELECT p.post_id, post_title, post_body, post_created, author_id, username, post_image, comment'
+        'SELECT p.post_id, post_title, post_body, post_created, author_id, username, post_image'
         ' FROM post p JOIN user u ON p.author_id = u.user_id'
         ' WHERE p.post_id = ?',
         (id,)

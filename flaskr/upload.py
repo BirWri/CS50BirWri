@@ -8,7 +8,7 @@ import cv2
 import numpy as np
 
 
-from . import ALLOWED_EXTENSIONS, UPLOAD_FOLDER
+from config import ALLOWED_EXTENSIONS, UPLOAD_FOLDER
 
 
 bp = Blueprint('upload', __name__)
