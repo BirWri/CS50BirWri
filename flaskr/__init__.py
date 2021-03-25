@@ -13,34 +13,30 @@ from extensions import csrf
 # export FLASK_ENV=development
 # flask run
 
-#UPLOAD_FOLDER = '/Users/dotdj/Desktop/web-projects/CS50BirWri/flaskr/static/upload/'
-# SHOULD I DELETE THIS HERE OR WIL THIS BE ADDED TO THE CONFIG.PY?
-#ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
-#instance_path='/Users/dotdj/Desktop/web-projects/CS50BirWri/instance'
-
 def create_app(test_config=None):
     # create and configure the app
-    app = Flask(__name__)
+    app = Flask(__name__, instance_relative_config=True)
 
     # Figure out how to make config.py set up
     #https://hackersandslackers.com/configure-flask-applications/
     #https://itnext.io/how-and-why-have-a-properly-configuration-handling-file-using-flask-1fd925c88f4c
     #https://pythonise.com/series/learning-flask/flask-configuration-files
-   
+    
+    # Best explanation for instance_relative_config=True importance
+    #https://flask.palletsprojects.com/en/1.1.x/tutorial/factory/
     #Ensure templates are auto-reloaded
     print("Before")
     print(app.config)
-    #print("Instance")
-    #print(flask.instance_path)
 
     app.config.from_pyfile('config.py')
 
     print("after")
     print(app.config)
     
+    # custom filter to retrieve number of comments a post have. Can be seen as
+    # in index page on the comment button
     app.jinja_env.filters['number_of_comments'] = number_of_comments
    
-
     Bootstrap(app)
 
     # CSRF, which stands for Cross-Site Request Forgery, is an attack against a web application in which 
