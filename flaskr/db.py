@@ -12,8 +12,10 @@ def get_db():
             current_app.config['DATABASE'],
             detect_types=sqlite3.PARSE_DECLTYPES
         )
+        g.db.text_factory = str
         # tells connection to return rows that behave like rows, gives access to column names 
         g.db.row_factory = sqlite3.Row
+        
 
     return g.db
 

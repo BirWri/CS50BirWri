@@ -1,4 +1,5 @@
 from flaskr.db import get_db
+from flask import Response
 
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
 
@@ -72,3 +73,17 @@ def get_comment(id):
         abort(404, "Post id {0} doesn't exist.".format(id))
 
     return entry
+
+
+def get_image(cartoon_title):
+    entry = get_db().execute(
+        'SELECT *'
+        ' FROM cartoon'
+        ' WHERE cartoon_title = ?',
+        (cartoon_title,)
+    ).fetchone()
+
+    if entry is None:
+        abort(404, "Post id {0} doesn't exist.".format(id))
+
+    return (entry)

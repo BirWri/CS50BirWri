@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS post;
 DROP TABLE IF EXISTS comments;
+DROP TABLE IF EXISTS cartoon;
 
 CREATE TABLE user (
   user_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -26,4 +27,15 @@ CREATE TABLE comments (
   comment_title TEXT NOT NULL,
   comment_body TEXT NOT NULL,
   FOREIGN KEY (OG_post_id) REFERENCES post (post_id)
+);
+
+CREATE TABLE cartoon (
+  cartoon_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  cartoon_author_id INTEGER NOT NULL,
+  cartoon_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  cartoon_title TEXT NOT NULL,
+  cartoon_original_image TEXT NOT NULL,
+  cartoon_original_photo BLOB NOT NULL, 
+  cartoon_image_name TEXT ,
+  FOREIGN KEY (cartoon_author_id) REFERENCES user (user_id)
 );

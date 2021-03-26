@@ -152,16 +152,15 @@ def title_image_text():
             filename = secure_filename(file.filename)
             file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
             post_image = 'upload/'+filename
-            #path_1 = UPLOAD_FOLDER+filename
             
             if not body:
                 body = "empthy"
 
             db = get_db()
             db.execute(
-                'INSERT INTO post (post_title, post_body, author_id, post_image, comment)'
+                'INSERT INTO post (post_title, post_body, author_id, post_image)'
                 ' VALUES (?, ?, ?, ?, ?)',
-                (title, body, g.user['user_id'],  post_image, 0)
+                (title, body, g.user['user_id'],  post_image)
             )
             db.commit()
             return redirect("/")
