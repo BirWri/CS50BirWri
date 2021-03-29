@@ -92,10 +92,8 @@ def title_body():
 def title_image():
     if request.method == 'POST':
 
-
         title = request.form['title']
         file = request.files['file']
-
 
         error = None
 
@@ -124,7 +122,56 @@ def title_image():
             return redirect("/")
 
     else:
+        
         return render_template('blog/title_image.html')
+
+###### BLOG POST WITH TITLE AND CARTOONIMAGE ######
+@bp.route('/title_cartoon_image', methods=('GET', 'POST'))
+@login_required
+def title_cartoon_image():
+    if request.method == 'POST':
+
+        title = request.form['title']
+        imagename = request.form['imagename']
+
+        error = None
+
+        if not title:
+            error = 'Title is required.'
+
+        if error is not None:
+            flash(error)
+
+       
+        post_image = 'upload/'+ imagename + ".jpg"
+            
+        # has to add this due to NOT NULL in db
+        body = "empthy"
+
+        db = get_db()
+        # can remove cooment column from db
+        db.execute(
+            'INSERT INTO post (post_title, post_body, author_id, post_image)'
+            ' VALUES (?, ?, ?, ?)',
+            (title, body, g.user['user_id'],  post_image)
+        )
+        db.commit()
+        return redirect("/")
+
+    else:
+
+        rows = get_db().execute('SELECT cartoon_image_name FROM cartoon WHERE cartoon_author_id = ?', 
+        (g.user['user_id'],)
+        )
+
+        CartoonTitles = []
+
+        for row in rows:
+            current_symbol = row["cartoon_image_name"]
+            CartoonTitles.append(current_symbol)
+        
+        return render_template('blog/title_cartoon_image.html', CartoonTitles = CartoonTitles)
+
 
 ###### BLOG POST WITH TITLE, IMAGE AND TEXT ######
 @bp.route('/title_image_text', methods=('GET', 'POST'))

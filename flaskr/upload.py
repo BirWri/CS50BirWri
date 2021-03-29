@@ -16,6 +16,7 @@ import sqlite3
 
 bp = Blueprint('upload', __name__)
 
+#i can remove this and import from helpers
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -32,6 +33,7 @@ def upload_file():
         # check if the post request has the file part
         if 'file' not in request.files:
             flash('No file part')
+            # where does rediredt take me?
             return redirect(request.url)
         
         
@@ -43,27 +45,32 @@ def upload_file():
 
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
+            # save the file to the folder
             file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
 
             #https://pynative.com/python-sqlite-blob-insert-and-retrieve-digital-data/
-            klup = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+            # the path to the saved file from above
+            photoPath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
 
+            # convert photo to blob, so i can store it in db as a blob
             def convertToBinaryData(klup):
             # Convert digital data to binary format
-                with open(klup, 'rb') as file:
+                with open(photoPath, 'rb') as file:
                     blobData = file.read()
                 return blobData 
 
-            cartoon_original_photo = convertToBinaryData(klup)
+            cartoon_original_photo = convertToBinaryData(photoPath)
 
-            cartoon_original_image = filename
+            #rename the filename to be the user choisen cartoon image title
+            # POINTLESS??
+            #cartoon_original_image = filename
 
             #save the original image path in db
             db = get_db()
             db.execute(
                 'INSERT INTO cartoon ( cartoon_title, cartoon_author_id, cartoon_original_image, cartoon_original_photo)'
                 ' VALUES (?, ?, ?, ?)',
-                (cartoon_title, g.user['user_id'],  cartoon_original_image, cartoon_original_photo)
+                (cartoon_title, g.user['user_id'],  filename, cartoon_original_photo)
             )
             db.commit()
             return redirect(url_for('upload.uploaded_file', cartoon_title=cartoon_title))
@@ -73,10 +80,13 @@ def upload_file():
 @bp.route('/upload/<cartoon_title>')
 def uploaded_file(cartoon_title):
 
+    #I use the db data to edit a photo, but it can be done much easier by just having the path to the photo instead of converting a blob to jpeg again...
     entry = get_image(cartoon_title)
+    # The blob column from db
     data = entry[5]
     
     photoPath = current_app.config['UPLOAD_FOLDER'] + cartoon_title + ".jpg"
+
     print("BITCH HERE")
     print(photoPath)
 
@@ -96,10 +106,20 @@ def uploaded_file(cartoon_title):
     color2 = before2.quantize(9)
 
     color2=color2.convert('RGB')
+    
+    new_name= cartoon_title + ".jpg"
 
-    color2.save(os.path.join(current_app.config['UPLOAD_FOLDER'], 'OUT.jpeg'))
+    color2.save(os.path.join(current_app.config['UPLOAD_FOLDER'], new_name))
+
+    db = get_db()
+
+    db.execute(
+                'UPDATE cartoon SET cartoon_image_name=? WHERE cartoon_author_id=? AND cartoon_title =? ',
+                (cartoon_title, g.user['user_id'], cartoon_title)
+            )
+    db.commit()
     
     
 
     return send_from_directory(current_app.config['UPLOAD_FOLDER'],
-                               'OUT.jpeg')
+                               new_name)

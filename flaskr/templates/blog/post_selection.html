@@ -40,6 +40,24 @@
         <a class="btn btn-primary" href="{{ url_for('blog.title_image') }}" role="button" style="margin-left: 110px;">Create</a>
     </div>
 
+
+    <div class="col" style="flex-grow: 0;">
+
+        <div div class="card mb-3" style="width: 18rem; height: 18rem;">
+            <div class="card-body">
+            <header>
+                <div>
+                  <h2>Post title</h2>
+                  <div class="about">by [username] on [date and time]</div>
+                </div>
+            </header>
+            <img src="{{ url_for('static', filename='temp.jpg') }}" class="card-img-top" style="width: 15.5rem; height: 9rem; padding-top: 5px;">
+            
+        </div>   
+    </div>
+        <a class="btn btn-primary" href="{{ url_for('blog.title_cartoon_image') }}" role="button" style="margin-left: 110px;">Create</a>
+    </div>
+
     <div class="col" style="flex-grow: 0;">
 
         <div div class="card mb-3" style="width: 18rem; height: 18rem;">
