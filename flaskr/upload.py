@@ -87,9 +87,6 @@ def uploaded_file(cartoon_title):
     
     photoPath = current_app.config['UPLOAD_FOLDER'] + cartoon_title + ".jpg"
 
-    print("BITCH HERE")
-    print(photoPath)
-
     def writeTofile(data, cartoon_title):
     # Convert binary data to proper format and write it on Hard Disk
         with open(cartoon_title, 'wb') as file:
@@ -97,9 +94,9 @@ def uploaded_file(cartoon_title):
     
     writeTofile(data, photoPath)
     
+    #Photo edit section
     before2= Image.open(photoPath)
     
-
     #before = response(current_app.config['UPLOAD_FOLDER'], entry[4])
     edgeEnahnced = before2.filter(ImageFilter.EDGE_ENHANCE)
     gray = ImageOps.grayscale(before2)
@@ -108,6 +105,7 @@ def uploaded_file(cartoon_title):
     color2=color2.convert('RGB')
     
     new_name= cartoon_title + ".jpg"
+    print(new_name)
 
     color2.save(os.path.join(current_app.config['UPLOAD_FOLDER'], new_name))
 
@@ -115,11 +113,14 @@ def uploaded_file(cartoon_title):
 
     db.execute(
                 'UPDATE cartoon SET cartoon_image_name=? WHERE cartoon_author_id=? AND cartoon_title =? ',
-                (cartoon_title, g.user['user_id'], cartoon_title)
+                (new_name, g.user['user_id'], cartoon_title)
             )
     db.commit()
-    
-    
 
-    return send_from_directory(current_app.config['UPLOAD_FOLDER'],
-                               new_name)
+    post = get_image(cartoon_title)
+    print(post['cartoon_image_name'])
+    
+    return render_template('upload/uploaded.html', post = post)
+
+    #return send_from_directory(current_app.config['UPLOAD_FOLDER'],
+                               #new_name)

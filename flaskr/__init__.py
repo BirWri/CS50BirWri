@@ -25,14 +25,9 @@ def create_app(test_config=None):
     # Best explanation for instance_relative_config=True importance
     #https://flask.palletsprojects.com/en/1.1.x/tutorial/factory/
     #Ensure templates are auto-reloaded
-    print("Before")
-    print(app.config)
-
+  
     app.config.from_pyfile('config.py')
 
-    print("after")
-    print(app.config)
-    
     # custom filter to retrieve number of comments a post have. Can be seen as
     # in index page on the comment button
     app.jinja_env.filters['number_of_comments'] = number_of_comments
@@ -45,8 +40,6 @@ def create_app(test_config=None):
     # https://flask-wtf.readthedocs.io/en/stable/csrf.html
 
     csrf.init_app(app)
-
-
 
     # testing section
 

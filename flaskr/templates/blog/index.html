@@ -107,14 +107,14 @@
       <!--To check if the post has an body -->
       {% if post['post_body'] != 'empthy' %}
       
-      <p class="body">{{ post['post_body'] }}</p>
+      <p class="body" >{{ post['post_body'] }}</p>
 
       {% endif %}
 
       <!-- Redirects user to a page with the orginal post and comments people have left. Also gives user to leave their own reply -->
       <!-- {{post['post_id']|number_of_comments}} is a custom filter, to count how many comments a distinct post has -->
       <form action="{{ url_for('blog.reply', id=post.post_id) }}">
-        <button type="submit" class="btn btn-primary"> Comment (  {{post['post_id']|number_of_comments}} )</button>
+        <button type="submit" style="margin-top:10px;" class="btn btn-primary"> Comment (  {{post['post_id']|number_of_comments}} )</button>
       </form>
 
     </article>

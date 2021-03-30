@@ -144,7 +144,7 @@ def title_cartoon_image():
 
        
         post_image = 'upload/'+ imagename + ".jpg"
-            
+
         # has to add this due to NOT NULL in db
         body = "empthy"
 
@@ -206,7 +206,7 @@ def title_image_text():
             db = get_db()
             db.execute(
                 'INSERT INTO post (post_title, post_body, author_id, post_image)'
-                ' VALUES (?, ?, ?, ?, ?)',
+                ' VALUES (?, ?, ?, ?)',
                 (title, body, g.user['user_id'],  post_image)
             )
             db.commit()
