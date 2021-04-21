@@ -50,54 +50,39 @@ function refreshpage() {
   </div>
 
   <div class="row">
-    
-    <div class="col">
-
-    </div>
 
     <div class="col">
 
-        <form  method="POST" enctype="multipart/form-data" style="width:400px">
+        <form  method="POST" enctype="multipart/form-data" >
 
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            
+          <div class="container mt-4 mb-4">
+              <div class="row justify-content-md-center">
+                <div class="col-md-12 col-lg-12">
 
-          <div class="form-group">
-            <input autocomplete="off" autofocus class="form-control" name="title" id="title" placeholder="Image name" type="text" value="{{ request.form['title'] }}" style="width: 100%;" required>
-          </div>
+                  <div class="form-group">
+                      <input autocomplete="off" autofocus class="form-control" name="title" id="title" placeholder="Title" type="text" value="{{ request.form['title'] }}" style="width: 100%;" required>
+                  </div>
 
-          <div class="form-group">
-            <div class="custom-file">           
-              <input type="file" class="custom-file-input" name="file" placeholder="file" id="image" oninput="pr()"  onchange="preview()">
-              <label class="custom-file-label" for="image" ><span id="result"></span></label>
-            </div>
-          </div>
-  
+                  <div class="custom-file">           
+                    <input type="file" class="custom-file-input" name="file" placeholder="file" id="file" oninput="pr()"  onchange="preview()">
+                    <label class="custom-file-label" for="image" ><span id="result"></span></label>
+                  </div>
 
-    </div>
+                  <div class="container" style=" padding-left:0px;  padding-right:0px">
+                    <img id="frame" style="padding-top:20px; padding-bottom:20px;" />
+                  </div>
       
-    <div class="col">
-        
+        <button type="submit" class="btn btn-primary">Cartoonify</button>  
+        <button type="button" class="btn btn-secondary" onclick="refreshpage()">Cancel</button>
+      
+      
+      </div>
     </div>
-
   </div>
-
-  
-
-
-    <div class="container">
-      <img id="frame" />
-    </div>
-
-    <div class="row">
-      
-        <button type="submit" class="btn btn-primary" style="margin-left: 40%; margin-right:2px; margin-bottom: 20px; margin-top: 20px;">Cartoonify</button>
-     
-      
-        <button type="button" class="btn btn-secondary" style="margin-bottom: 20px; margin-top: 20px;" onclick="refreshpage()">Cancel</button>
-      
-      
-    </div>
   </form>
+</div>
 
 </div> 
 

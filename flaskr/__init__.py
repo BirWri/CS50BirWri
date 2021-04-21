@@ -24,9 +24,6 @@ def create_app(test_config=None):
     
     # Best explanation for instance_relative_config=True importance
     #https://flask.palletsprojects.com/en/1.1.x/tutorial/factory/
-    #Ensure templates are auto-reloaded
-  
-    app.config.from_pyfile('config.py')
 
     # custom filter to retrieve number of comments a post have. Can be seen as
     # in index page on the comment button

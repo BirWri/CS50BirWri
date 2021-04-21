@@ -143,7 +143,7 @@ def title_cartoon_image():
             flash(error)
 
        
-        post_image = 'upload/'+ imagename + ".jpg"
+        post_image = 'upload/'+ imagename
 
         # has to add this due to NOT NULL in db
         body = "empthy"
@@ -239,7 +239,7 @@ def update_post(id):
             db.commit()
             return redirect(url_for('blog.index'))
 
-        file = request.files['file']
+        #file = request.files['file']
 
         error = None
 
@@ -318,9 +318,6 @@ def reply(id):
         body = re.sub(clean, '', request.form['body'])
         clean = re.compile('<.*?>')
         post_id = request.form.get('post_id')
-
-        print('post_id') 
-        print(post_id) 
 
         error = None
 

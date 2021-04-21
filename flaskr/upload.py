@@ -64,7 +64,7 @@ def upload_file():
             #rename the filename to be the user choisen cartoon image title
             # POINTLESS??
             #cartoon_original_image = filename
-
+            
             #save the original image path in db
             db = get_db()
             db.execute(
@@ -73,6 +73,7 @@ def upload_file():
                 (cartoon_title, g.user['user_id'],  filename, cartoon_original_photo)
             )
             db.commit()
+
             return redirect(url_for('upload.uploaded_file', cartoon_title=cartoon_title))
     else:                                
         return render_template('upload/upload.html')
@@ -97,15 +98,13 @@ def uploaded_file(cartoon_title):
     #Photo edit section
     before2= Image.open(photoPath)
     
-    #before = response(current_app.config['UPLOAD_FOLDER'], entry[4])
-    edgeEnahnced = before2.filter(ImageFilter.EDGE_ENHANCE)
-    gray = ImageOps.grayscale(before2)
+    #edgeEnahnced = before2.filter(ImageFilter.EDGE_ENHANCE)
+    #gray = ImageOps.grayscale(before2)
     color2 = before2.quantize(9)
 
     color2=color2.convert('RGB')
     
     new_name= cartoon_title + ".jpg"
-    print(new_name)
 
     color2.save(os.path.join(current_app.config['UPLOAD_FOLDER'], new_name))
 
@@ -117,10 +116,8 @@ def uploaded_file(cartoon_title):
             )
     db.commit()
 
-    post = get_image(cartoon_title)
-    print(post['cartoon_image_name'])
+    #post = get_image(cartoon_title)
     
-    return render_template('upload/uploaded.html', post = post)
+    #return render_template('upload/uploaded.html', post = post)
 
-    #return send_from_directory(current_app.config['UPLOAD_FOLDER'],
-                               #new_name)
+    return send_from_directory(current_app.config['UPLOAD_FOLDER'], new_name)
