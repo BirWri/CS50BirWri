@@ -11,7 +11,7 @@ from flaskr.db import get_db
 import re
 import os
 
-from config import UPLOAD_FOLDER
+from config import UPLOAD_FOLDER, ALLOWED_EXTENSIONS
 from helpers import get_comments, number_of_comments, get_post, get_comment, allowed_file
 
 
@@ -76,9 +76,9 @@ def title_body():
             
         db = get_db()
         db.execute(
-            'INSERT INTO post (post_title, post_body, author_id, post_image, comment)'
-            ' VALUES (?, ?, ?, ?, ?)',
-            (title, body, g.user['user_id'], post_image, 0)
+            'INSERT INTO post (post_title, post_body, author_id, post_image)'
+            ' VALUES (?, ?, ?, ?)',
+            (title, body, g.user['user_id'], post_image)
         )
         db.commit()
         return redirect("/")
@@ -226,8 +226,8 @@ def update_post(id):
         
         clean = re.compile('<.*?>')
         title = request.form['title']
-        body = re.sub(clean, '', request.form['body'])
         file = request.files['file']
+        body = re.sub(clean, '', request.form['body'])
 
         if not file:
             db = get_db()

@@ -7,6 +7,7 @@
 
 <style>
   .control-label {display: none;}
+  p.help-block {display: none;}
 </style>
 
 <!-- Form to recieve username and password for db entry -->
@@ -15,13 +16,15 @@
 
 <!-- https://john.soban.ski/pass-bootstrap-html-attributes-to-flask-wtforms.html -->
 
-<!-- LOOK AT THIS ONE TOMRROW -->
 <!-- https://stackabuse.com/flask-form-validation-with-flask-wtf/ -->
 
 {% for field, errors in form.errors.items() %}
-    <small class="form-text text-muted ">
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
         {{ ', '.join(errors) }}
-    </small>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
 {% endfor %}
 
 <div class="container" id="RegisterPlacement">
@@ -30,7 +33,6 @@
   <form action="" method=post class="form" role="form">
     <!-- https://flask-wtf.readthedocs.io/en/stable/csrf.html -->
     <!--  https://testdriven.io/blog/csrf-flask/ -->
-    <!-- LOOK INTO THE TOKEN-->
  
     <dl>
       <div class="container" >

@@ -1,4 +1,4 @@
-# CS50BirWri
+# A1000Words
 ### Video Demo:  <URL HERE>
 
 ---
@@ -12,22 +12,30 @@
 
 ---
 ### Introduction
-My final project is a simple website which by idea is meant to be a writing challenge and by functionality is very similar to a blog concept. Users are able to submit different types of posts and comment on other users entries. I have also implemented a very simple photo filter feature, where users can apply a cartoon filter on an uploaded image. The user can then proceed to use the cartoon image in one of the post options.   
-As a complete beginner in programming, I am using skills I obtained during the course. The project is built with Flask framework with Bootstrap (version 4.6) frontend tools. I am using Jinja to render templates. My database is setup with SQLite and I am using my computer to host the database (db). Programming language is Python and as the text editor I am using VS Code.
+My final project is a simple website which in its idea is meant to be a writing challenge and in its functionality is very similar to a blog concept. Registered users can submit posts with their stories, that have been inspired by a photo or an image. The other users then have an opportunity to write their own stories based on the uploaded images. The idea came from the saying ”a picture is worth a 1000 words”, and in this case users have the opportunity to express their own 1000 words, that the image tells them. I have also implemented a very simple photo filter feature, where users can apply a cartoon filter on an uploaded image. The user can then proceed to use the cartoon image in one of the post options.   
+As a complete beginner in programming, I am using skills I obtained during the course. The project is built with the Flask framework with Bootstrap (version 4.6) frontend tools. I am using Jinja to render templates. My database is setup with SQLite and I am using my computer (local ssetup) to host the database (db). The chosen programming language is Python and I used VS Code as a text editor.
 
 ---
 ### How to run the web application
 
-Enter the next flask commands to the terminal. The first command tells Flask where to find the applicatin. The second command declares the mode to be development.
- 
-1. export FLASK_APP=flaskr
-2. export FLASK_ENV=development
-3. flask run
+To get up and running, enter the following flask commands to the terminal. The first command tells Flask where to find the application. The second command declares the mode to be development.
+
+```bash
+export FLASK_APP=flaskr
+export FLASK_ENV=development
+flask run
+```
 
 ---
 ### The files
 
-I have decided to structre this part based on the folders in the project. The paragraph is named based on a folder from the project and the subsections of the content are the files contained in the folder.
+I have decided to structre this part based on the folders in the project. The paragraphs are named based on a folder from the project and the subsections of the content are the files contained in the folder.
+
+The size of the title indicates if it is a header, folder or a file. For example:
+### Header
+#### Folder
+##### File
+###### References
 
 ---
 ### The Python files
@@ -39,38 +47,36 @@ It is a Python package, that includes the code for the application and most of t
 ---
 ##### __init__.py
 
-The file has two main purposes. It contains the application factory and it signals to Python, that the project folder flaskr directory should be treated as a package. 
-The file begings with the application factory function named `create_app()`. The `instance_relative_config = True` basically lets the app know, that configuration file can be found in the instance folder.
+This file has two main purposes. It contains the application factory and it signals to Python, that the project folder flaskr directory should be treated as a package. 
+The file begins with the application factory function named `create_app()`. The `instance_relative_config = True` basically lets the app know, that the configuration file can be found in the instance folder.
 
-Next in the code is ` app.jinja_env.filters['number_of_comments'] = number_of_comments`. It is a custom filter, that retrives the number of comments a post have and is applied in index.html file. `Bootstrap(app)` is added to the file to have access to some of the design features from the Bootstrap library. `Csrf.init_app(app)` is a little security addition, that protect users against CSRF(Cross-Site Request Forgery) attacks. An unique token is created with every submission of a form in this project to make it impossible for an unintended task on the user authenticated web application on the behalf of the someone elses interest. If FlaskForm is used, then it should already include CSRF protection, but as my project is not consistent in its design, I decided for the sake of gaining experince to add it myself aswell. 
+Next in the code is ` app.jinja_env.filters['number_of_comments'] = number_of_comments`.This is a custom filter, that retrives the number of comments a post has and is applied in the `index.html` file. `Bootstrap(app)` is added to the file to have access to some of the design features from the Bootstrap library via a package called `flask_boostrap`. `Csrf.init_app(app)` is a little security addition, that protect users against CSRF(Cross-Site Request Forgery) attacks. An unique token is created with every submission of a form in this project to make it impossible for an unintended task on the user authenticated web application on the behalf of the someone elses interest. If FlaskForm is used, then it should already include CSRF protection, but as my project is not consistent in its design, I decided for the sake of gaining experince to add it myself aswell. 
 
-The next section in the file is about the configuration settings for developing or testing. The regular configuration of the entire application is applied throught ` app.config.from_pyfile('config.py') `, which can be found in the code snippet below. It links to a separate  `config.py` file, that includes all the important configurations values, which will replace the defalut settings. The importance of having an instance folder is explained in a separate paragraph. 
+The next section in the file is about the configuration settings for developing or testing. The regular configuration of the entire application is applied through ` app.config.from_pyfile('config.py') `, which can be found in the code snippet below. It links to a separate `config.py` file, that includes all the important configurations values, which will replace the defalut settings. The importance of having an instance folder is explained in the **Instance** paragraph below. 
 
-```ruby
+```python
 if test_config is None:
-        # load the instance config, if it exists, when not testing
-        app.config.from_pyfile('config.py', silent=True)
+  # load the instance config, if it exists, when not testing
+  app.config.from_pyfile('config.py', silent=True)
 
-    else:
-        # load the test config if passed in
-        app.config.from_mapping(test_config)    
+else:
+  # load the test config if passed inS
+  app.config.from_mapping(test_config)    
 ```
-The else section in the file is dedicated to testing. I have not included the testing folder in this report as the code I was experimenting with was borrowed from the Flask Tutorial and wasn't and original addition. The code below is to check the presence of instance folder and its path.
+The `else` section above is dedicated to testing. I have not included the testing folder in this report as the code I was experimenting with was borrowed from the Flask Tutorial and wasn't an original addition. The code below is to check the presence of the instance folder and its path.
 
-```ruby
+```python
 try:
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass    
+  os.makedirs(app.instance_path)
+except OSError:
+  pass    
 ```
-The last lines of the code are to register the blueprints with the app. Blueprints are a way to organize related code and to avoid having one large file for all of the project. Most of the import are identicalexcept for the names of the blueprint, except for the blog.py lines.
-```ruby
- # blog blueprint
-    from . import blog
-    app.register_blueprint(blog.bp)
-    app.add_url_rule('/', endpoint='index')
-```
-It has an addtional line `app.add_url_rule('/', endpoint='index')`, which define the index page to be at `/`. So in theory the views that are connected to the blog blueprint will not have to have a prefix as they do in auth.py (Read little more in auth.py). I have still used blog prefix in every url_for or function reference in my code.  
+The last lines of the code are to register the blueprints with the app. Blueprints are a way to organize related code and to avoid having one large file for all of the project.
+```python
+# authentication
+from . import auth
+app.register_blueprint(auth.bp)
+``` 
 ###### References
 
 1. https://flask.palletsprojects.com/en/1.1.x/tutorial/factory/
@@ -84,17 +90,22 @@ It has an addtional line `app.add_url_rule('/', endpoint='index')`, which define
 Is a module, where functions concerning user authentication have been gathered. The files begings with the creation of the Blueprint. 
 `bp = Blueprint('auth', __name__, url_prefix='/auth')`
 The line includes the name of the Blueprint, which in this case is `auth` and `url_prefix` means that `auth` is added before all views and URLs in the blueprint.  
-The file includes register, login, logout, and password change functions. In addition, functions to check if a user is logged in (`login_required`) and fetching data for logged in user(`load_logged_in_user`) have been added. `Login_required` is categorized as a decorator, by adding this to other views, it makes sure a user is logged in before giving access to the page. In the case of register and login the function will return a form for the user to fill in. For WTForms classes have been defined on extensions.py file. These classes are called in the code lines below and then fed to the the html files for forms. 
-`form = RegistrationForm(request.form)`
-`form = LoginForm(request.form)`
-When the user submits the data, it will be validated, which ends up as either an error or registration of a new user or successful login. In case of successful login the session dictionary is cleared before saving the recently logged in user id. `User['user_id']` gives access to most of features in the web applicatin and is important to make sure it is the correct value. 
-```ruby
-if error is None:
-    session.clear()
-    session['user_id'] = user['user_id']
-    return redirect(url_for('index'))
+The file includes register, login, logout, and password change functions. In addition, functions to check if a user is logged in (`login_required`) and fetching data for logged in user(`load_logged_in_user`) have been added. 
+
+`Login_required` is categorized as a decorator, by adding this to other views, it makes sure a user is logged in before giving access to the page. In the case of register and login the function will return a form for the user to fill in. For WTForms classes have been defined on `extensions.py` file. These classes are called in the code lines below and then fed to the the html files for forms. 
+```python
+form = RegistrationForm(request.form)
+form = LoginForm(request.form)
 ```
-The password is stored as a hash for better security.In the case of the password change the user is asked for the username and old password, which will be validated and the new password, which will be checked to not be the same as the old password. If all the requirements have been passed, the new password will be added to the db, if one of them fails, the form is loaded again with an error message. Logout function clears the user id from the session dictionary. 
+When the user submits the data, it will be validated, which ends up as either an error, the registration of a new user or a successful login. In case of successful login, the session dictionary is cleared before saving the recently logged in user id. `User['user_id']` gives access to most features in the web application and is important to make sure it is the correct value. 
+```python
+if error is None:
+  session.clear()
+  session['user_id'] = user['user_id']
+  return redirect(url_for('index'))
+```
+The password is stored as a hash for better security. In the case of a password change the user is asked for the username and old password, which will be validated and their new desired password, which will be checked not to be the same as the old password. If the requirements have been fulfilled, the new password will be hashed and added to the db, if one of them fails, the form is loaded again with an error message.
+The logout function clears the user id from the session dictionary. 
 
 ###### References
 
@@ -103,18 +114,35 @@ The password is stored as a hash for better security.In the case of the password
 ---
 ##### Blog.py
 
-The second blueprint gathers code concerning logged in user’s abilities, to create, delete, edit a post. This is the file with most lines in this project.
+The second blueprint gathers code concerning a logged in user’s abilities, to perform CRUD operations (create, read, update/edit and delete) on a post. This is the file with most lines in this project.
 If the user is logged in, the blueprint begins with index page function, that fetches and shows all the posts from the db. If no user id is present in the session dictionary the program refers the user to the landing page (`about.html`), where they are asked to either Register or Log in.
-```ruby
+```python
 if g.user is None:
     return render_template('blog/about.html')
 ```
-The second function is about post creation. Firstly, the user is directed to a page, where they must choose their post format. In this case there are 4 templates to choose from. The next four functions deal with the 4 types of posts. The 4 types of posts are as follows: title and body, title and image, title and cartoonified image, and last, but not least title, image and body. In all the cases some form of a form is shown to the user. The post types, that include body section have TinyMCE text editor called to get the user text input. The received text needs to be cleaned before injecting it to the db, which is done with line `re.compile(‘<.*>’)`, that removes the unnecessary tags from the text. 
-Post types with image requires users to upload an image to the database. I have implemented two versions of image storage. The most common is, where uploaded images are directly stored in the `UPLOAD_FOLDER`. The path to the folder can be find in the `config.py` file. The second version is explained in the `upload.py`, where the uploaded image is stored differently due to additional photo editing step. In addition, a list of selected file extensions has been listed to prevent unwelcomed files being uploaded to db. The filename is run through `werkzeug.secure_filename()` to make sure the code doesn’t directly save the `“UPLOAD_FOLDER + filename”` path to the db, so that unwelcomed intruders can’t just send an input named `filename=”../../filename”` as the function takes the file path and converts it to a more secure version, which will be then added to the db. 
-The post creation with cartoon images is a different process. The page has a dropdown menu, from where the user can choose images, they have uploaded.   
-The next two functions are concerning the user’s ability to edit a post or a comment. In both cases the id of a post or a comment is an input to the function, that is used to fetch the specific information from the db.  The id is used in the `entry= get_post(id)`, which is fetching the specific data for the inquiry. The `get_post()` function can be found in the `helpers.py` file. 
-The reply function gives the users ability to comment on a post. When the function is activated, the user is shown the original post followed with all its comments. To be able to perform it, both the post and comments need to be fetched from the db. As the user submits its reply, the process requesting inputs, validating the input or flashing an error and inserting information into db. The user is redirected to the same page, where they see the original post with all of the comments including theirs.
-The two last functions are dedicated to deleting a post or a comment. These functions require an input, which needs to be the id of the post or comment. The id is used to fetch the correct db entry for deletion. In my code the action of deleting is separated between the post and comments table. The last step is redirecting the user to the index page with a flash message, letting the user know of the successful deletion. 
+The second function is about the creation of a post. Firstly, the user is directed to a page, where they must choose their post format, in this case there are 4 templates to choose from, which have been divided into 4 different functions for each type of posts. The 4 types of posts are as follows: 
+1. title and body
+2. title and image
+3. title and cartoonified image
+4. title, image and body.
+
+In each case a specific form is shown to the user. 
+
+The post types that include a `body` section use a WYSIWYG (What You See Is What You Get) text editor called TinyMCE text to get the user text input. The received text needs to be cleaned before injecting it to the db, which is done with line `re.compile(‘<.*>’)`, that removes the unnecessary tags from the text. 
+
+The posts with images requires users to choose and upload an image. I have implemented two versions of image storage:
+1. The most common is, where uploaded images are directly stored in the `UPLOAD_FOLDER`. The path to the folder can be find in the `config.py` file. 
+2. The second version is explained in the `upload.py`, where the uploaded image is stored differently due to additional photo editing step. 
+
+In addition, a list of selected file extensions has been listed to prevent unwelcomed files being uploaded to db. The filename is run through `werkzeug.secure_filename()` to make sure the code doesn’t directly save the `“UPLOAD_FOLDER + filename”` path to the db, so that unwelcomed intruders can’t just send an input named `filename=”../../filename”` as the function takes the file path and converts it to a more secure version, which will be then added to the db. 
+
+The post creation with cartoon images is a different process. The page has a dropdown menu, from where the user can choose images, they have uploaded. 
+
+The next two functions (`update_post(id)` and `update_comment(id)`) are concerning the user’s ability to edit a post or a comment. In both cases the id of a post or a comment is an input to the function, that is used to fetch the specific information from the db. The id is used in the `entry= get_post(id)`, which is fetching the specific data for the enquiry. The `get_post()` function can be found in the `helpers.py` file. 
+
+The reply function (`reply(id)`) gives the users ability to comment on a post. When the function is called, the user is shown the original post followed with all its comments. To be able to perform it, both the post and comments need to be fetched from the db. As a user submit their reply, the inputs are validated, and if no errors are inserted into the db or validation errors are shown to guide them. The user is then redirected to the same page, where they see the original post with all of the comments including theirs.
+
+The last two functions (`delete_post(id)` and `delete_comment(id)`) are dedicated to deleting a post or a comment. These functions require an input, which needs to be the id of the post or comment. The id is used to fetch the correct db entry for deletion. In my code, the action of deleting is separated between the post and comments table. The last step is redirecting the user to the index page with a flash message, letting the user know of the successful deletion of the post/comment. 
 
 ###### References
 
@@ -124,7 +152,12 @@ The two last functions are dedicated to deleting a post or a comment. These func
 ---
 ##### Db.py
 
-The file includes 5 functions. The first one is to establish connection to the db file. The path to the file can be found in the `config.py` under the name `DATABASE`. The second function is to check if the connection to the db was successful and to close the connection. The third function `init_b` is a function, that is called to create all the necessary tables for the db. It can be used to reset the db completely as it deletes and recreates all the tables.  The list of the tables and the variables included in the tables can be seen in the file schema.sql. The next function is to utilize the power of the `init_b` function. In the beginning of the app development flask `init_b` commandment is ran in the terminal, that creates all the necessary db tables. After successful initiation message “ Initialized the database” is printed in the terminal. The last function allows the `init_b` commandent to be registered with the application and be used a flask command. As a result of running command flaskr.sqlite is created into the instance folder.
+The file includes 5 functions: 
+1. First (`get_db()`) is used to establish a connection to the database. The path to the file can be found in the `config.py` under the name `DATABASE`. 
+2. Then (`close_db`) is used to check if the connection to the db was successful and to close the connection. 
+3. Thirdly, the `init_b` function is called to create all the necessary tables for the db. It can be used to reset the db completely as it deletes and recreates all tables. The list of tables and variables included in the tables can be seen in the file `schema.sql`. 
+4. Then the (`init_db_command()`) function utilizes the power of the `init_b` function. At the beginning of the app development flask `init_b` command is ran in the terminal, that creates all the necessary db tables. After successful initiation a *“Initialized the database”* message is printed in the terminal. 
+5. The last function (`init_app(app)`) allows the `init_b` command to be registered with the application and be used a flask command. As a result of running the command `flaskr.sqlite` is created into the instance folder.
 
 ###### References
 
@@ -133,12 +166,12 @@ The file includes 5 functions. The first one is to establish connection to the d
 ---
 ##### Extensions.py
 
-The file was created to try to keep the `__init__.py` file cleaner looking. There were several ways to accomplish this and I just chose to have a separate file and import it to the `__init__.py`. It includes an library import necessary to implement the csrf token and it also includes a line of code, which is needed to run the system successfully. 
+The file was created to try to keep the `__init__.py` file cleaner and more consise. There were several ways to accomplish this and I just chose to have a separate file and import it to the `__init__.py`. It includes a library import necessary to implement the `csrf` token and it also includes a line of code, which is needed to run the system successfully. 
 
 ---
 ##### Forms.py
 
-The file is dedicated to the definition of classes for different types of forms used in the code. There is a class created for registration, login and password change.  `Validators.DataRequired()` makes sure an imput has been submitted by a user. `Validators.Length(min, max)` set a minimum and maximum limitation for the length of the password. During password change process the new password and confirm is checked by `validators.EqualTo(‘confirm’, …)` to makes sure the same string has been submitted.
+The file is dedicated to the definition of classes for different types of forms used in the code. There is a class created for registration, login and password change.  `Validators.DataRequired()` makes sure an imput has been submitted by a user. `Validators.Length(min, max)` set a minimum and maximum limitation for the length of the password. During the password change process, the new password and confirm (the same password repeated) is checked by `validators.EqualTo(‘confirm’, …)` to makes sure the same string has been submitted.
 
 ###### References
 
@@ -212,18 +245,18 @@ If the user doesn’t fill in the required file an error is shown. The  WTForm d
 `{% import "bootstrap/wtf.html" as wtf %}`
 The code renders a login form with username and password field. The script below was added to switch off the labels on the WTForm fields.
  
-```ruby
+```html
 <style>
     .control-label {display: none;}
 </style>
 ```
 To apply the csrf token during post form action. 
-```ruby
+```html
  <!-- csrf_token  -->
  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 ```
 To implement the WTForm and use the classes defines in the forms.py file. 
-```ruby
+```html
  <dl>
     <div class="container" >
         {{ wtf.form_field(form.username, class='form-control' , placeholder='Username') }}
@@ -254,37 +287,36 @@ Is a landing page for user either to Regiser or Login.
 Are made of similar building block, which I will make a general overview. Different posts, comments are contained in a card. A card is a flexible content container. In this project simple two types of cards are mainly used. The most simple one with just the title and body is used as a type of a post and as the format for the comments. The second type is a card with title, image and body. 
 The author of the post or a comment has a three dots menu icon available. By pressing it a dropdown menu appears with the option of either Edit or Delete the entry. If Edit is chosen the user is directed to the update function and view. The delete button opens a modal, where additional confirmation is asked from the user to delete the post. An example of the modal implementation is as follows.
 First there is a button, to activated the modal. Each modal has to have a unique id for it to work. Id originality is acieved by adding `{{ post['post_id']}}` to the href.
-```ruby
+```html
 <a  href="#confirm-delete-{{ post['post_id']}}" class="nav-link" type="button" data-toggle="modal">Delete post</a>
 ```
 The actual code for the modal.
-```ruby
- <div class="modal fade" id="confirm-delete-{{ post['post_id'] }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="myModalLabel">Delete post</h5>
-                  <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  Are you sure you want to delete "{{post['post_title']}}"" post?
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <form action="{{ url_for('blog.delete_post', id=post['post_id']) }}" method="post">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                  </form>
-          
-                </div>
-              </div>
-            </div>
-          </div>
+```html
+<div class="modal fade" id="confirm-delete-{{ post['post_id'] }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myModalLabel">Delete post</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete "{{post['post_title']}}"" post?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <form action="{{ url_for('blog.delete_post', id=post['post_id']) }}" method="post">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 ```
 
 In addtion, the `<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>` had to be added to the modal to work. The cancel button refreshes the page. It is done with a small JS code shown down.
 
-```ruby
+```html
 <script>
 
 function refreshpage() {
@@ -295,13 +327,13 @@ function refreshpage() {
 </script>
 ```
 In `index.html` the implementation of a custom filter, that retrieves the number of comments a post has, is done as `|number_of_comments` in the code below:
-```ruby
+```html
 <form action="{{ url_for('blog.reply', id=post.post_id) }}">
         <button type="submit" style="margin-top:10px;" class="btn btn-primary"> Comment (  {{post['post_id']|number_of_comments}} )</button>
       </form>
 ```
 Several JS functions have been implemented in `title_image_text.html`, etc. The first is named `pr`. The purpose of it is to remove everything else except the filename in the form fiels, when uploading a file.  `SelectFileText` is written to fill the form field with text “Select image…”. Preview function shows a preview of the uploaded image. 
-```ruby
+```javascript
 function pr() {
     
     var path = document.getElementById('image').value;
@@ -355,7 +387,7 @@ A local file, that includes the projects `SECRET_KEY`.
 ##### config.py
 
 The configurations for the web applications. It is a very basic and simple setup. Python-dotenv (`environ.get`) helps to retrieve .env for the SECRET_KEY. 
-```ruby
+```python
 from os import environ, path
 from dotenv import load_dotenv
 
@@ -392,7 +424,7 @@ I began my project without any structuring whatsoever and it quickly became a co
 
 I wrote my configurations, including the SECRET_KEY, directly into the source code and uploaded it to Github. It took me quite a long time to understand the gravity of my mistake. I am glad for the lesson as it made me look a little more indepth about the security of my application and make me mindful of it in the future.  
 
-In my future programming projects, I will try to keep uniformity of the syntax from the get-go. I noticed later in the project, that for example I have written my db execution lines in different styles. By the time I became aware of it, it was too time consuming for me to go through the whole program to change it. I would like to practice writing code, where I write more helper functions compared to having many lines in my blueprints. I believe it would result in easier error detection and I can reuse functions instead repeating them in my code. Lastly, I did not properly organize my CSS code. I have some in style.css and some in the html files.
+In my future programming projects, I will try to keep uniformity of the syntax from the get-go. I noticed later in the project, that for example I have written my db execution lines in different styles. By the time I became aware of it, it was too time consuming for me to go through the whole program to change it. I would like to practice writing code, where I write more helper functions compared to having many lines in my blueprints. I believe it would result in easier error detection and I can reuse functions instead repeating them in my code. Lastly, I did not properly organize my CSS code. I have some in style.css and some in the html files, which is now a nightmare to work with. In addition, I have made the mistake of adding `print()` function in my code, that says "CHECK HERE", but doesnt say where the "here" is... I cant find the line from my source code. In the future I will add more information on where i place my `print()` function, so i can successfully remove them if needed. 
 
 I noticed the addition of backing up project version on gitup in 2021 class. This is a great habit to learn from early on, as I am from 2020 class and I lost the first version of my final project due to a mysterious glitch. My loss lead me to GitKraken and I will never stop using it. 
 
