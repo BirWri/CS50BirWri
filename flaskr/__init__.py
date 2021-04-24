@@ -8,6 +8,10 @@ from flask_bootstrap import Bootstrap
 from extensions import csrf
 
 
+# install python 2.7
+# install flask => pip install flask
+# install requirements => pip install -r requirements.txt
+# (move config.py out of instance folder to root)
 # to run the application
 # export FLASK_APP=flaskr
 # export FLASK_ENV=development

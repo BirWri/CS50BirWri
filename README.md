@@ -24,6 +24,7 @@ To get up and running, enter the following flask commands to the terminal. The f
 export FLASK_APP=flaskr
 export FLASK_ENV=development
 flask run
+flask init-db
 ```
 
 ---
