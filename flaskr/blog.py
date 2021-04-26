@@ -11,8 +11,8 @@ from flaskr.db import get_db
 import re
 import os
 
-from config import UPLOAD_FOLDER, ALLOWED_EXTENSIONS
-from helpers import get_comments, number_of_comments, get_post, get_comment, allowed_file
+from config import ALLOWED_EXTENSIONS, UPLOAD_FOLDER
+from flaskr.helpers import get_comments, number_of_comments, get_post, get_comment, allowed_file
 
 
 bp = Blueprint('blog', __name__)
@@ -97,16 +97,12 @@ def title_image():
 
         error = None
 
-        if not title:
-            error = 'Title is required.'
-
-        if error is not None:
-            flash(error)
-
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
-            post_image = 'upload/'+filename
+
+            file.save(os.path.join(current_app.root_path,current_app.config['UPLOAD_FOLDER'],filename))
+          
+            post_image = 'upload/'+ filename
             
             # has to add this due to NOT NULL in db
             body = "empthy"
@@ -120,6 +116,13 @@ def title_image():
             )
             db.commit()
             return redirect("/")
+        else:
+
+            error = "Not correct file type"
+            flash(error)
+            return render_template('blog/title_image.html')
+
+
 
     else:
         
@@ -134,13 +137,29 @@ def title_cartoon_image():
         title = request.form['title']
         imagename = request.form['imagename']
 
+        print(imagename)
+
         error = None
 
-        if not title:
-            error = 'Title is required.'
+        if not allowed_file(imagename):
+            error = 'Image is required.'
+            
 
         if error is not None:
             flash(error)
+
+            rows = get_db().execute('SELECT cartoon_image_name FROM cartoon WHERE cartoon_author_id = ?', 
+            (g.user['user_id'],)
+            )
+
+            CartoonTitles = []
+
+            for row in rows:
+                current_symbol = row["cartoon_image_name"]
+                CartoonTitles.append(current_symbol)
+        
+            return render_template('blog/title_cartoon_image.html', CartoonTitles = CartoonTitles)
+
 
        
         post_image = 'upload/'+ imagename
@@ -187,17 +206,9 @@ def title_image_text():
 
         error = None
 
-        if not title:
-            error = 'Title is required.'
-
-        if error is not None:
-            flash(error)
-
-        # TODO I feel i am missing some erroor hooks over here....
-
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+            file.save(os.path.join(current_app.root_path,current_app.config['UPLOAD_FOLDER'],filename))
             post_image = 'upload/'+filename
             
             if not body:
@@ -211,6 +222,11 @@ def title_image_text():
             )
             db.commit()
             return redirect("/")
+        else:
+
+            error = "Not correct file type"
+            flash(error)
+            return render_template('blog/title_image_text.html')
 
     else:
         return render_template('blog/title_image_text.html')
@@ -228,6 +244,7 @@ def update_post(id):
         title = request.form['title']
         file = request.files['file']
         body = re.sub(clean, '', request.form['body'])
+        error = None
 
         if not file:
             db = get_db()
@@ -239,20 +256,11 @@ def update_post(id):
             db.commit()
             return redirect(url_for('blog.index'))
 
-        #file = request.files['file']
 
-        error = None
-
-        if not title:
-            error = 'Title is required.'
-
-        if error is not None:
-            flash(error)
-        
-        else:
+        if file and allowed_file(file.filename):
 
             filename = secure_filename(file.filename)
-            file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+            file.save(os.path.join(current_app.root_path,current_app.config['UPLOAD_FOLDER'],filename))
             post_image = 'upload/'+filename
             db = get_db()
             db.execute(
@@ -262,6 +270,11 @@ def update_post(id):
             )
             db.commit()
             return redirect(url_for('blog.index'))
+        else:
+            error = "Not correct file type"
+            flash(error)
+            return render_template('blog/update_post.html', post=entry)
+
 
     return render_template('blog/update_post.html', post=entry)
 

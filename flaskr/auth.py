@@ -9,9 +9,9 @@ from functools import wraps
 
 from wtforms import Form, BooleanField, StringField, PasswordField, validators, SubmitField
 
-from extensions import csrf
+from flaskr.extensions import csrf
 
-from forms import ChangePasswordForm,  RegistrationForm, LoginForm
+from flaskr.forms import ChangePasswordForm,  RegistrationForm, LoginForm
 
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')

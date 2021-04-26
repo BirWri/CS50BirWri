@@ -1,17 +1,16 @@
 import os
 
 from flask import Flask
-from auth import login_required
+from flaskr.auth import login_required
 
-from helpers import number_of_comments
+from flaskr.helpers import number_of_comments
 from flask_bootstrap import Bootstrap
-from extensions import csrf
+from flaskr.extensions import csrf
 
 
-# install python 2.7
 # install flask => pip install flask
 # install requirements => pip install -r requirements.txt
-# (move config.py out of instance folder to root)
+# install setup files => python setup.py install
 # to run the application
 # export FLASK_APP=flaskr
 # export FLASK_ENV=development

@@ -9,8 +9,8 @@ import numpy as np
 from PIL import Image, ImageFilter, ImageOps
 
 
-from config import ALLOWED_EXTENSIONS, UPLOAD_FOLDER
-from helpers import get_image
+from config import ALLOWED_EXTENSIONS
+from flaskr.helpers import get_image
 
 import sqlite3
 
@@ -46,11 +46,11 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             # save the file to the folder
-            file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+            file.save(os.path.join(current_app.root_path,current_app.config['UPLOAD_FOLDER'],filename))
 
             #https://pynative.com/python-sqlite-blob-insert-and-retrieve-digital-data/
             # the path to the saved file from above
-            photoPath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+            photoPath = os.path.join(current_app.root_path,current_app.config['UPLOAD_FOLDER'],filename)
 
             # convert photo to blob, so i can store it in db as a blob
             def convertToBinaryData(klup):
@@ -86,7 +86,7 @@ def uploaded_file(cartoon_title):
     # The blob column from db
     data = entry[5]
     
-    photoPath = current_app.config['UPLOAD_FOLDER'] + cartoon_title + ".jpg"
+    photoPath = current_app.root_path + "/" + current_app.config['UPLOAD_FOLDER'] + cartoon_title + ".jpg"
 
     def writeTofile(data, cartoon_title):
     # Convert binary data to proper format and write it on Hard Disk
@@ -106,7 +106,7 @@ def uploaded_file(cartoon_title):
     
     new_name= cartoon_title + ".jpg"
 
-    color2.save(os.path.join(current_app.config['UPLOAD_FOLDER'], new_name))
+    color2.save(os.path.join(current_app.root_path,current_app.config['UPLOAD_FOLDER'], new_name))
 
     db = get_db()
 

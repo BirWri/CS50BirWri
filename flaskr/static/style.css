@@ -80,7 +80,7 @@ main .form-control
     height: 260px;          /* Set this to your convenience */
     position: absolute;
     top: 50%;
-    left: 25%;
+    left: 30%;
     margin-top: -145px;     /* Half of height */ 
     margin-left: -150x;     /* Half of width */
     background-color: rgba(20, 20, 20, 0.459);
