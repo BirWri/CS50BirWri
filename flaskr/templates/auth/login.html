@@ -1,5 +1,4 @@
- <!-- LOGIN page for the users -->
-
+<!-- LOGIN page for the users -->
 <!-- REGISTER page for new users -->
 {% import "bootstrap/wtf.html" as wtf %}
 
@@ -8,43 +7,30 @@
 {% block content %}
 
 <style>
-    .control-label {display: none;}
+  .control-label {
+    display: none;
+  }
 </style>
-    
-     <!-- Form to recieve username and password for db chaeck -->
-     <!-- pt-4 is from Bootstrap and means padding top size 4 -->
-     <!-- https://getbootstrap.com/docs/4.6/utilities/spacing/ -->
-    <div class="container pt-4" id="LoginPlacement">
-       
-        
-        <h1>Log in</h1>
-            
-            <form method="post">
-                 <!-- csrf_token  -->
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-                <dl>
-                    <div class="container" >
-                    {{ wtf.form_field(form.username, class='form-control' , placeholder='Username') }}
-                  </div>
-                  <div class="container" >
-                    {{ wtf.form_field(form.password, class='form-control', placeholder='Password') }}
-                  </div>
-                  <div class="container" >
-                    {{ wtf.form_field(form.submit, class="btn btn-primary")  }}
-                  </div>
-              
-                  </dl>
-                
-                
-            </form>
-    </div>
-
-    
-    
-
+<!-- Form to recieve username and password for db chaeck -->
+<!-- pt-4 is from Bootstrap and means padding top size 4 -->
+<!-- https://getbootstrap.com/docs/4.6/utilities/spacing/ -->
+<div class="container pt-4" id="LoginPlacement">
+  <h1>Log in</h1>
+  <form method="post">
+    <!-- csrf_token  -->
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <dl>
+      <div class="container">
+        {{ wtf.form_field(form.username, class='form-control' , placeholder='Username') }}
+      </div>
+      <div class="container">
+        {{ wtf.form_field(form.password, class='form-control', placeholder='Password') }}
+      </div>
+      <div class="container">
+        {{ wtf.form_field(form.submit, class="btn btn-primary") }}
+      </div>
+    </dl>
+  </form>
+</div>
 {% endblock %}
-
-
-
-

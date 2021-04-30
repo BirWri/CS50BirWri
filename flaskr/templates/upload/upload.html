@@ -2,92 +2,68 @@
 
 {% block content %}
 
-
 <!-- https://flask.palletsprojects.com/en/1.1.x/patterns/fileuploads/ -->
 <!-- https://speckyboy.com/custom-file-upload-fields/ -->
-
-   <!-- Page to use if i want preview of image -->
-        <!-- https://stackoverflow.com/questions/4459379/preview-an-image-before-it-is-uploaded -->
-
-
+<!-- Page to use if i want preview of image -->
+<!-- https://stackoverflow.com/questions/4459379/preview-an-image-before-it-is-uploaded -->
 
 <script>
-  // To see the name of the imagien without the full directory
-  function pr() {
-    
-    var path = document.getElementById('image').value;
-    var filename = path.replace(/^.*\\/, "");
-    console.log(path);
-    document.getElementById("result").innerHTML = filename;
-  };
+// To see the name of the imagien without the full directory
+function pr() {
+  var path = document.getElementById('image').value;
+  var filename = path.replace(/^.*\\/, "");
+  console.log(path);
+  document.getElementById("result").innerHTML = filename;
+};
 
-  // if no file has been chosen, then have a Select file line.
-  function SelectFileText() {
- 
+// if no file has been chosen, then have a Select file line.
+function SelectFileText() {
   document.getElementById("result").innerHTML = "Select file ...";
-  }
+}
 
-  function preview() {
-    frame.src=URL.createObjectURL(event.target.files[0]);
+function preview() {
+  frame.src = URL.createObjectURL(event.target.files[0]);
 }
 
 function refreshpage() {
   window.location.reload();
-
 }
 
 </script>
 
 <div class="container" id="UploadPlacement">
-
   <div class="row">
     <div class="col">
-    
       <h1 style="color:white">Upload an image</h1>
       <hr>
-
     </div>
   </div>
-
   <div class="row">
-
     <div class="col">
-
-        <form  method="POST" enctype="multipart/form-data" >
-
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-            
-          <div class="container mt-4 mb-4">
-              <div class="row justify-content-md-center">
-                <div class="col-md-12 col-lg-12">
-
-                  <div class="form-group">
-                      <input autocomplete="off" autofocus class="form-control" name="title" id="title" placeholder="Title" type="text" value="{{ request.form['title'] }}" style="width: 100%;" required>
-                  </div>
-
-                  <div class="custom-file">           
-                    <input type="file" class="custom-file-input" name="file" placeholder="file" id="file" oninput="pr()"  onchange="preview()" required>
-                    <label class="custom-file-label" for="image" ><span id="result"></span></label>
-                  </div>
-
-                  <div class="container" style=" padding-left:0px;  padding-right:0px">
-                    <img id="frame" style="padding-top:20px; padding-bottom:20px;" />
-                  </div>
-      
-        <button type="submit" class="btn btn-primary">Cartoonify</button>  
-        <button type="button" class="btn btn-secondary" onclick="refreshpage()">Cancel</button>
-      
-      
-      </div>
+      <form method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        <div class="container mt-4 mb-4">
+          <div class="row justify-content-md-center">
+            <div class="col-md-12 col-lg-12">
+              <div class="form-group">
+                <input autocomplete="off" autofocus class="form-control" name="title" id="title" placeholder="Title"
+                  type="text" value="{{ request.form['title'] }}" style="width: 100%;" required>
+              </div>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" name="file" placeholder="file" id="file" oninput="pr()"
+                  onchange="preview()" required>
+                <label class="custom-file-label" for="image"><span id="result"></span></label>
+              </div>
+              <div class="container" style=" padding-left:0px;  padding-right:0px">
+                <img id="frame" style="padding-top:20px; padding-bottom:20px;" />
+              </div>
+              <button type="submit" class="btn btn-primary">Cartoonify</button>
+              <button type="button" class="btn btn-secondary" onclick="refreshpage()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
-  </form>
 </div>
-
-</div> 
-
-
-
-
-
 {% endblock %}

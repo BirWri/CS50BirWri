@@ -13,3 +13,4 @@ dist/
 .dist/
 build/
 *.egg-info/
+flaskr/static/upload/

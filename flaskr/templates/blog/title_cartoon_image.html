@@ -5,66 +5,47 @@
 
 {% block content %}
 
-
 <script>
-
-function refreshpage() {
-  window.location.reload();
-
-}
-
+  function refreshpage() {
+    window.location.reload();
+  }
 </script>
 
- 
-    
-    <div class="container" id="UploadPlacement">
-    
-      <div class="row">
-        <div class="col">
-        
-          <h1 style="color:white">New post</h1>
-    
-        </div>
-      </div>
+<div class="container" id="UploadPlacement">
+  <div class="row">
+    <div class="col">
+      <h1 style="color:white">New post</h1>
+    </div>
+  </div>
 
-
-        <div class="row">
-          <div class="col">
-    
-        
-          <form method="post" enctype="multipart/form-data">
-
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-            
-            <div class="container mt-4 mb-4">
-                <div class="row justify-content-md-center">
-                  <div class="col-md-12 col-lg-12">
-
-                    <div class="form-group">
-                        <input autocomplete="off" autofocus class="form-control" name="title" id="title" placeholder="Title" type="text" value="{{ request.form['title'] }}" style="width: 100%;" required>
-                    </div>
-
-                    <select class="custom-select form-group" id = imagename name =imagename onchange="preview()">
-                      <option selected>Open this select menu for cartoonified photos folder</option>
-                      {% for title in CartoonTitles %}
-
-                      <option value="{{title}}" id = imageTitle name =imageTitle>{{title}}</option>
-                      {% endfor %}
-                    </select>
-
-                    <div class="container" style=" padding-left:0px;  padding-right:0px">
-                      <img id="frame" style="padding-top:20px; padding-bottom:20px;" />
-                    </div>
-                   
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                    <button type="button" class="btn btn-secondary" style="margin-bottom: 20px; margin-top: 20px;" onclick="refreshpage()">Cancel</button>
-                   
-
-                  </div>
-                </div>
+  <div class="row">
+    <div class="col">
+      <form method="post" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        <div class="container mt-4 mb-4">
+          <div class="row justify-content-md-center">
+            <div class="col-md-12 col-lg-12">
+              <div class="form-group">
+                <input autocomplete="off" autofocus class="form-control" name="title" id="title" placeholder="Title"
+                  type="text" value="{{ request.form['title'] }}" style="width: 100%;" required>
               </div>
-            </form>
+              <select class="custom-select form-group" id=imagename name=imagename onchange="preview()">
+                <option selected>Open this select menu for cartoonified photos folder</option>
+                {% for title in CartoonTitles %}
+                <option value="{{title}}" id=imageTitle name=imageTitle>{{title}}</option>
+                {% endfor %}
+              </select>
+              <div class="container" style=" padding-left:0px;  padding-right:0px">
+                <img id="frame" style="padding-top:20px; padding-bottom:20px;" />
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+              <button type="button" class="btn btn-secondary" style="margin-bottom: 20px; margin-top: 20px;"
+                onclick="refreshpage()">Cancel</button>
+            </div>
           </div>
         </div>
-    </div> 
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}

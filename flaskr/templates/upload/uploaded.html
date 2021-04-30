@@ -5,38 +5,29 @@
 {% endblock %}
 
 <div class="container" id="UploadPlacement">
-    <div class="card mb-3" id="card">
-        <div class="card-body">
-          <!-- What is <article> tag used for? -->
-          <article class="post">
-      
-            <!-- Using Bootstrap grid system for easy and neat layout. This is row 1, where title, username and edit button are located-->
-            <!-- https://getbootstrap.com/docs/4.6/layout/grid/ -->
-            <div class="row">
-              <div class="col-11">
-      
-                <!-- The first part below is seen for every user -->
-                <header>
-                  <div>
-                    <h2>{{ post['cartoon_title'] }}</h2>
-                    <div class="about">by {{ post['cartoon_author_id'] }} on {{ post['cartoon_created'].strftime('%Y-%m-%d') }}</div>
-                  </div>
+  <div class="card mb-3" id="card">
+    <div class="card-body">
+      <!-- What is <article> tag used for? -->
+      <article class="post">
+        <!-- Using Bootstrap grid system for easy and neat layout. This is row 1, where title, username and edit button are located-->
+        <!-- https://getbootstrap.com/docs/4.6/layout/grid/ -->
+        <div class="row">
+          <div class="col-11">
+            <!-- The first part below is seen for every user -->
+            <header>
+              <div>
+                <h2>{{ post['cartoon_title'] }}</h2>
+                <div class="about">by {{ post['cartoon_author_id'] }} on {{ post['cartoon_created'].strftime('%Y-%m-%d')
+                  }}</div>
               </div>
-      
-          
-      
-              </header>
-            </div>
-      
-            <!--To check if the post has an image-->
-            {% if post['cartoon_image_name'] != 'empthy' %}
-      
-            <img src="{{url_for('static', filename=upload/post.cartoon_image_name)}}" class="card-img-top">
-      
-            {% endif %}
-    
-      
-          </article>
+          </div>
+          </header>
         </div>
-      </div>
+        <!--To check if the post has an image-->
+        {% if post['cartoon_image_name'] != 'empthy' %}
+        <img src="{{url_for('static', filename=upload/post.cartoon_image_name)}}" class="card-img-top">
+        {% endif %}
+      </article>
+    </div>
+  </div>
 </div>

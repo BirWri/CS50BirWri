@@ -14,87 +14,76 @@
 
 <!--Functions to make upload file work, preview of the image and fill the input filed, with the name of the file-->
 <script>
-  // To see the name of the imagien without the full directory
-  function pr() {
-    
-    var path = document.getElementById('image').value;
-    var filename = path.replace(/^.*\\/, "");
-    document.getElementById("result").innerHTML = filename;
-  };
+// To see the name of the imagien without the full directory
+function pr() {
+  var path = document.getElementById('image').value;
+  var filename = path.replace(/^.*\\/, "");
+  document.getElementById("result").innerHTML = filename;
+};
 
-  // if no file has been chosen, then have a Select file line.
-  // "result" canbe found inthe base.html file
-  function SelectFileText() {
- 
+// if no file has been chosen, then have a Select file line.
+// "result" canbe found inthe base.html file
+function SelectFileText() {
   document.getElementById("result").innerHTML = "Select image...";
-  }
+}
 
-  function preview() {
-    frame.src=URL.createObjectURL(event.target.files[0]);
+function preview() {
+  frame.src=URL.createObjectURL(event.target.files[0]);
 }
 
 function refreshpage() {
   window.location.reload();
-
 }
-
-
 </script>
 
-    <div class="container" id="UploadPlacement">
+<div class="container" id="UploadPlacement">
+
+  <div class="row">
+    <div class="col">
     
-      <div class="row">
-        <div class="col">
-        
-          <h1 style="color:white">New post</h1>
-    
-        </div>
-      </div>
-    
-        <div class="row">
-          <div class="col">
-        
-          <!--It is a from to upload and submit data to db-->
-          <form method="post" enctype="multipart/form-data">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      <h1 style="color:white">New post</h1>
+
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+  
+    <!--It is a from to upload and submit data to db-->
+    <form method="post" enctype="multipart/form-data">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      
+      <div class="container mt-4 mb-4">
+        <div class="row justify-content-md-center">
+          <div class="col-md-12 col-lg-12">
+            <div class="form-group">
+              <input autocomplete="off" autofocus class="form-control" name="title" id="title" placeholder="Title" type="text" value="{{ request.form['title'] }}" style="width: 100%;" required>
+            </div>W
+            <!--Upload file section-->
+              <!--LINKS MISSING-->
+              <!--LINKS MISSING-->
+            <div class="custom-file">           
+              <input type="file" class="custom-file-input" name="file" placeholder="file" id="file" oninput="pr()"  onchange="preview()" required>
+              <label class="custom-file-label" for="image" ><span id="result"></span></label>
+            </div>
+
+            <!--Section for image preview-->
+            <div class="container" style=" padding-left:0px;  padding-right:0px">
+              <img id="frame" style="padding-top:20px; padding-bottom:20px;" />
+            </div>
             
-            <div class="container mt-4 mb-4">
-                <div class="row justify-content-md-center">
-                  <div class="col-md-12 col-lg-12">
+            <div class="form-group">
+              <textarea name="body" placeholder="Leave a comment here" id="body">{{ request.form['body'] }}</textarea>
+            </div>
 
-
-                    <div class="form-group">
-                        <input autocomplete="off" autofocus class="form-control" name="title" id="title" placeholder="Title" type="text" value="{{ request.form['title'] }}" style="width: 100%;" required>
-                      </div>
-                    
-                    <!--Upload file section-->
-                     <!--LINKS MISSING-->
-                     <!--LINKS MISSING-->
-                    <div class="custom-file">           
-                      <input type="file" class="custom-file-input" name="file" placeholder="file" id="file" oninput="pr()"  onchange="preview()" required>
-                      <label class="custom-file-label" for="image" ><span id="result"></span></label>
-                    </div>
-
-                    <!--Section for image preview-->
-                    <div class="container" style=" padding-left:0px;  padding-right:0px">
-                      <img id="frame" style="padding-top:20px; padding-bottom:20px;" />
-                    </div>
-
-                    
-                    <div class="form-group">
-                      <textarea name="body" placeholder="Leave a comment here" id="body">{{ request.form['body'] }}</textarea>
-                    </div>
-
-                   
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                    <button type="button" class="btn btn-secondary" style="margin-bottom: 20px; margin-top: 20px;" onclick="refreshpage()">Cancel</button>
-                   
-
-                  </div>
-                </div>
-              </div>
-            </form>
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="button" class="btn btn-secondary" style="margin-bottom: 20px; margin-top: 20px;" onclick="refreshpage()">Cancel</button>
+          
           </div>
         </div>
-    </div> 
+        </div>
+      </form>
+    </div>
+  </div>
+</div> 
 {% endblock %}
