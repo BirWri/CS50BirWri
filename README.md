@@ -20,7 +20,7 @@ As a complete beginner in programming, I am using skills I obtained during the c
 
 To get up and running, enter the following flask commands to the terminal. The first command tells Flask where to find the application. The second command declares the mode to be development.
 
-//TODO: add pre-requisites here...
+//TODO: add pre-requisites here... and initial setup
 
 ```bash
 export FLASK_APP=flaskr
@@ -207,7 +207,7 @@ The first part of the uploading process is the same as described in the `blog.py
 
 I also experimented uploading an image as a BLOB, which is stored in the db. To achieve it, the image needed to be converted to blobdata. After the conversion the blob is inserted into the db with the usual insert into command. 
 
-The image is edited with the `uploaded_file` function. The function uses the stored blob to convert it back to file format and apply the photo editing filter. The image is edited with a filter named quantize. The value 9 defines the number of colors to which the color scale is reduced. The new image is renamed and inserted to the upload folder and the edited cartoon image is shown to the user with `send_from_directory`. It is a secure and quick, but also rough way to show a static file from an upload folder. The user has access to the cartoon images in the process of cartoon image post creation. // TODO: what?
+The image is edited with the `uploaded_file` function. The function uses the stored blob to convert it back to file format and apply the photo editing filter. The image is edited with a filter named quantize. The value 9 defines the number of colors to which the color scale is reduced. The new image is renamed and inserted to the upload folder and the edited cartoon image is shown to the user with `send_from_directory`. It is a secure and quick, but also rough way to show a static file from an upload folder. The user has access to the cartoon images in the process of cartoon image post creation.
 
 ---
 ### HTML and CSS files
@@ -217,7 +217,7 @@ This project uses the Jinja template library to render templates. Jinja is simil
 ---
 #### Static
 
-The static folder is meant to contain all the static files of the project. Images, GIFs and css files used in the design are stored in this folder. It provides the opportunity to reference a file with referenced // TODO: what? with `url_for('static', filename='...')`.
+The static folder is meant to contain all the static files of the project. Images, GIFs and css files used in the design are stored in this folder. It provides the opportunity to reference a file with `url_for('static', filename='...')`.
 
 ---
 ##### Base.html
@@ -466,6 +466,3 @@ I noticed the addition of backing up project version on GitHub in the 2021 class
 I experienced great frustration as a result of unknowingly implementing different versions of Bootstrap, which didn't want to properly work together. I mixed versions of 3.4, 4.6 and 5.0. I eventually decided to use 4.6.
 
 The last lesson is concerning naming and the messages of my commits on GitHub. The importance of clear and precise naming of variables and functions saves so much time. A silly name for a variable can turn into a nightmare to track down or to know what it does.
-
-
-
