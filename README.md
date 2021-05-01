@@ -400,6 +400,11 @@ A license file to make my project open source, and hence free to use elsewhere.
 Information on the project and important documentation regarding it. (You are currently reading this).
 
 ---
+##### requirements.txt
+
+Includes all of the packages necesary to run the application. 
+
+---
 ##### Setup.py
 
 This file describes the projects and files that belong to it. The variable packages calls a function `find_packages`, which finds the package directories automatically. The configuration `include_package_data = True` allows to include static and template files to the application. These additional files are stored in `MANIFEST.in`. The file tells Python to copy everything in the static, templates and `schema.sql` files and to ignore all bytecode files. 
@@ -407,7 +412,7 @@ This file describes the projects and files that belong to it. The variable packa
 ---
 #### Instance
 
-The instance folder has been included in the `.gitignore` file, which means it won't be added to the GitHub repositry. Anything sensitive can be added to this folder as it stays on the local device. The folder includes the file with the SECRET_KEY, the configurations file and the database of the web application. I have now isolated my configurations to a separate file and pull the SECRET_KEY from an environment variable (`.env`).
+The instance folder has been included in the `.gitignore` file, which means it won't be added to the GitHub repositry. Anything sensitive can be added to this folder as it stays on the local device. The folder includes the file with the SECRET_KEY(`.env file`), the configurations file (`config.py`) and the database of the web application(`flaskr.sqlite`). I have now isolated my configurations to a separate file and pull the SECRET_KEY from an environment variable file `.env`.
 
 ---
 ##### .env
@@ -466,3 +471,8 @@ I noticed the addition of backing up project version on GitHub in the 2021 class
 I experienced great frustration as a result of unknowingly implementing different versions of Bootstrap, which didn't want to properly work together. I mixed versions of 3.4, 4.6 and 5.0. I eventually decided to use 4.6.
 
 The last lesson is concerning naming and the messages of my commits on GitHub. The importance of clear and precise naming of variables and functions saves so much time. A silly name for a variable can turn into a nightmare to track down or to know what it does.
+
+---
+### Conclusions
+
+Thank you CS50 for a wonderful course! I have learnt a lot and can't wait to continue to expand my knowledge! 
