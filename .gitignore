@@ -13,4 +13,5 @@ dist/
 .dist/
 build/
 *.egg-info/
-flaskr/static/upload/
+flaskr/static/upload/*
+!flaskr/static/upload/.keep

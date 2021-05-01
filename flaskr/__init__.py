@@ -7,11 +7,18 @@ from flaskr.helpers import number_of_comments
 from flask_bootstrap import Bootstrap
 from flaskr.extensions import csrf
 
-
+# to run the application
 # install flask => pip install flask
 # install requirements => pip install -r requirements.txt
 # install setup files => python setup.py install
-# to run the application
+# export FLASK_APP=flaskr
+# export FLASK_ENV=development
+# on first time setup for the db:
+# flask init-db -> check in terminal for "Initialized the database."
+# go to instance folder
+# create New File called .env and add SECRET_KEY='<Your-chosen-key>'
+# copy config.py file into the instance folder
+# Ctrl+C in terminal to stop the application
 # export FLASK_APP=flaskr
 # export FLASK_ENV=development
 # flask run
@@ -27,6 +34,10 @@ def create_app(test_config=None):
     
     # Best explanation for instance_relative_config=True importance
     #https://flask.palletsprojects.com/en/1.1.x/tutorial/factory/
+
+    app.config.from_mapping(
+        DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
+    )
 
     # custom filter to retrieve number of comments a post have. Can be seen as
     # in index page on the comment button
