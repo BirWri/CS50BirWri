@@ -20,14 +20,25 @@ As a complete beginner in programming, I am using skills I obtained during the c
 
 To get up and running, enter the following flask commands to the terminal. The first command tells Flask where to find the application. The second command declares the mode to be development.
 
-//TODO: add pre-requisites here... and initial setup
+#### Prerequisites
+1. make sure you have Python 3.9 installed
+2. Install flask => `pip install flask`
+3. Make sure flask is running with Python 3.9 => `flask --version`
 
-```bash
-export FLASK_APP=flaskr
-export FLASK_ENV=development
-flask run
-flask init-db
-```
+#### Initial setups
+1. install required packages => `pip install -r requirements.txt`
+2. install setup files => `python setup.py install`
+3. Run `export FLASK_APP=flaskr`
+4. Run `export FLASK_ENV=development`
+5. Initialize the database => `flask init-db` Note: this should have created a folder called "instance" in the root folder of the application.
+6. Go to instance folder and:
+   * create a new file called `.env` and add `SECRET_KEY='<Your-chosen-key>'` to it.
+   * copy the `config.py` file into the instance folder
+  
+#### Run the application
+1. Run `export FLASK_APP=flaskr`
+2. Run `export FLASK_ENV=development`
+3. Run `flask run`
 
 ---
 ### The files

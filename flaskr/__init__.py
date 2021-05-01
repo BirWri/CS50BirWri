@@ -8,6 +8,7 @@ from flask_bootstrap import Bootstrap
 from flaskr.extensions import csrf
 
 # to run the application
+# make sure you have Python 3.9 installed
 # install flask => pip install flask
 # install requirements => pip install -r requirements.txt
 # install setup files => python setup.py install
@@ -18,7 +19,6 @@ from flaskr.extensions import csrf
 # go to instance folder
 # create New File called .env and add SECRET_KEY='<Your-chosen-key>'
 # copy config.py file into the instance folder
-# Ctrl+C in terminal to stop the application
 # export FLASK_APP=flaskr
 # export FLASK_ENV=development
 # flask run
