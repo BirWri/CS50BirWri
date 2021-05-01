@@ -1,14 +1,14 @@
 # A1000Words
-### Video Demo:  <URL HERE>
+### Video Demo:  https://youtu.be/tMd83g0RFNk
 
 ---
-### Description:
-
 ### Table of Contents
+
 - Introduction
 - How to run the web application
 - The description of the files
 - Discussion
+- Conclusions
 
 ---
 ### Introduction
